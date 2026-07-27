@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  /* Onam Cultural Color System */
+  --color-primary: #0F5132;        /* Rich Deep Emerald Green */
+  --color-primary-dark: #0A3722;   /* Dark Emerald */
+  --color-primary-light: #167448;  /* Vibrant Leaf Green */
+
+  --color-secondary: #D4A017;      /* Kerala Kasavu Gold */
+  --color-secondary-dark: #A67C0E; /* Deep Antique Gold */
+  --color-secondary-light: #E5B83B;/* Bright Gold Sparkle */
+
+  --color-onam-bg: #FFF9F0;        /* Warm Cream Linen */
+  --color-onam-bg-subtle: #FDF4E3; /* Subtle Warm Linen */
+
+  --color-accent: #8B1E3F;         /* Royal Crimson / Maroon */
+  --color-accent-dark: #63122B;    /* Deep Maroon */
+
+  --shadow-soft: 0 10px 30px -10px rgba(15, 81, 50, 0.08);
+  --shadow-soft-lg: 0 20px 40px -15px rgba(15, 81, 50, 0.12);
+  --shadow-gold-glow: 0 0 25px rgba(212, 160, 23, 0.35);
+}
+
+@layer base {
+  html {
+    transition: background-color 300ms ease, color 300ms ease;
+  }
+
+  body {
+    background-color: var(--color-onam-bg);
+    color: #1E293B;
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    transition: background-color 300ms ease, color 300ms ease;
+  }
+
+  /* Dark Mode Class Overrides maintaining Onam Aesthetics */
+  html.dark body {
+    background-color: #062617;     /* Midnight Emerald */
+    color: #FFF9F0;                 /* Cream Text */
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+
+  /* High Contrast Accessibility Focus Outline Standard */
+  :focus-visible {
+    outline: 2px solid #D4A017 !important;
+    outline-offset: 2px !important;
+  }
+}
+
+/* Glassmorphism & Decorative Utility Classes */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 160, 23, 0.25);
+}
+
+html.dark .glass-card {
+  background: rgba(10, 55, 34, 0.85);
+  border: 1px solid rgba(212, 160, 23, 0.35);
+}
+
+.glass-dark {
+  background: rgba(15, 81, 50, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 160, 23, 0.3);
+}
+
+/* Custom Accessibility & Scrollbar Utilities */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FFF9F0;
+}
+html.dark ::-webkit-scrollbar-track {
+  background: #062617;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4A017;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0F5132;
+}
+
+/* Screen Reader Utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
