@@ -29,7 +29,6 @@ export const TicketVerification = ({ className }) => {
     ticketNumber: '8942',
     participantName: 'Prof. Ananthakrishnan Nair',
     department: 'Computer Science & Engineering',
-    employeeId: 'EMP-9842',
     phone: '9876543210',
     email: 'staff@college.edu.in',
     paymentId: 'PAY-RZP-98420',
@@ -55,7 +54,6 @@ export const TicketVerification = ({ className }) => {
         ticketNumber: searchCode.replace(/\D/g, '') || '8942',
         participantName: 'Prof. Ananthakrishnan Nair',
         department: 'Computer Science & Engineering',
-        employeeId: 'EMP-9842',
         phone: '9876543210',
         email: 'staff@college.edu.in',
         paymentId: 'PAY-RZP-98420',
@@ -169,18 +167,6 @@ export const TicketVerification = ({ className }) => {
                       </span>
                       <span className="font-extrabold text-slate-800 text-sm block mt-0.5">
                         {verifiedResult.department}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-[#FFF9F0] border border-amber-100/90 flex items-start gap-3">
-                    <IdCard className="w-5 h-5 text-[#0F5132] shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider block font-heading">
-                        Employee Registration ID
-                      </span>
-                      <span className="font-mono font-extrabold text-[#0F5132] text-sm block mt-0.5">
-                        {verifiedResult.employeeId}
                       </span>
                     </div>
                   </div>

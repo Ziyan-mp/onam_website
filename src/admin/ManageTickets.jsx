@@ -36,7 +36,6 @@ export const ManageTickets = ({ className }) => {
       ticketNumber: '8942',
       participantName: 'Prof. Ananthakrishnan Nair',
       department: 'Computer Science & Eng.',
-      employeeId: 'EMP-9842',
       amount: 150,
       date: '2026-07-27T18:30:00',
       status: 'PAID',
@@ -46,7 +45,6 @@ export const ManageTickets = ({ className }) => {
       ticketNumber: '8941',
       participantName: 'Dr. Sunitha Menon',
       department: 'Electronics & Comm.',
-      employeeId: 'EMP-9841',
       amount: 150,
       date: '2026-07-27T17:45:00',
       status: 'PAID',
@@ -56,7 +54,6 @@ export const ManageTickets = ({ className }) => {
       ticketNumber: '8940',
       participantName: 'Mr. Rajesh Varma',
       department: 'Administration',
-      employeeId: 'EMP-9840',
       amount: 150,
       date: '2026-07-27T16:20:00',
       status: 'PAID',
@@ -66,7 +63,6 @@ export const ManageTickets = ({ className }) => {
       ticketNumber: '8939',
       participantName: 'Prof. Meera Pillai',
       department: 'Mathematics',
-      employeeId: 'EMP-8939',
       amount: 150,
       date: '2026-07-27T15:10:00',
       status: 'PAID',
@@ -76,7 +72,6 @@ export const ManageTickets = ({ className }) => {
       ticketNumber: '8938',
       participantName: 'Dr. Vikram Shah',
       department: 'Physics',
-      employeeId: 'EMP-8938',
       amount: 150,
       date: '2026-07-27T14:05:00',
       status: 'PAID',
@@ -86,7 +81,6 @@ export const ManageTickets = ({ className }) => {
       ticketNumber: '8937',
       participantName: 'Prof. Lakshmi R.',
       department: 'Chemistry',
-      employeeId: 'EMP-8937',
       amount: 150,
       date: '2026-07-27T13:20:00',
       status: 'PAID',
@@ -99,7 +93,6 @@ export const ManageTickets = ({ className }) => {
       item.paymentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.participantName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.employeeId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       formatTicketId(item.ticketNumber).toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus = selectedStatus === 'ALL' || item.status === selectedStatus;
@@ -109,10 +102,10 @@ export const ManageTickets = ({ className }) => {
 
   // CSV Export Handler
   const exportCSV = () => {
-    const headers = ['Payment ID,Ticket Code,Participant Name,Department,Employee ID,Amount (INR),Payment Date,Status'];
+    const headers = ['Payment ID,Ticket Code,Participant Name,Department,Amount (INR),Payment Date,Status'];
     const rows = filteredPayments.map(
       (p) =>
-        `"${p.paymentId}","${formatTicketId(p.ticketNumber)}","${p.participantName}","${p.department}","${p.employeeId}",${p.amount},"${formatDate(p.date)}","${p.status}"`
+        `"${p.paymentId}","${formatTicketId(p.ticketNumber)}","${p.participantName}","${p.department}",${p.amount},"${formatDate(p.date)}","${p.status}"`
     );
 
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
@@ -142,7 +135,6 @@ export const ManageTickets = ({ className }) => {
               ticketNumber={activeModalTicket.ticketNumber}
               participantName={activeModalTicket.participantName}
               department={activeModalTicket.department}
-              employeeId={activeModalTicket.employeeId}
               paymentId={activeModalTicket.paymentId}
               amount={activeModalTicket.amount}
               drawDate={activeModalTicket.date}
@@ -253,11 +245,8 @@ export const ManageTickets = ({ className }) => {
                     </td>
 
                     {/* Participant */}
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col">
-                        <span className="font-bold text-slate-800">{row.participantName}</span>
-                        <span className="text-[10px] text-slate-400 font-mono">{row.employeeId}</span>
-                      </div>
+                    <td className="px-6 py-4 font-bold text-slate-800">
+                      {row.participantName}
                     </td>
 
                     {/* Department */}

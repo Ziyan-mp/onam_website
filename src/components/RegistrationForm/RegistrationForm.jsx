@@ -28,7 +28,6 @@ export const RegistrationForm = ({ className }) => {
     defaultValues: {
       fullName: '',
       department: '',
-      employeeId: '',
       phone: '',
       email: '',
       amount: 150,
@@ -141,34 +140,16 @@ export const RegistrationForm = ({ className }) => {
                 })}
               />
 
-              {/* Grid 2-cols: Department & Employee ID */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {/* Department */}
-                <Input
-                  label="Department *"
-                  placeholder="e.g. Computer Science / Admin"
-                  leftIcon={Building2}
-                  error={errors.department?.message}
-                  {...register('department', {
-                    required: 'Department is required',
-                  })}
-                />
-
-                {/* Employee ID */}
-                <Input
-                  label="Employee ID *"
-                  placeholder="e.g. EMP-9842"
-                  leftIcon={IdCard}
-                  error={errors.employeeId?.message}
-                  {...register('employeeId', {
-                    required: 'Employee ID is required',
-                    pattern: {
-                      value: /^[a-zA-Z0-9\s-]+$/,
-                      message: 'Enter valid Employee ID',
-                    },
-                  })}
-                />
-              </div>
+              {/* Department */}
+              <Input
+                label="Department *"
+                placeholder="e.g. Computer Science / Admin"
+                leftIcon={Building2}
+                error={errors.department?.message}
+                {...register('department', {
+                  required: 'Department is required',
+                })}
+              />
 
               {/* Grid 2-cols: Phone & Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

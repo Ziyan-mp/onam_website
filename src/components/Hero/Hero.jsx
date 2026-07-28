@@ -46,7 +46,7 @@ export const Hero = ({ className }) => {
             {/* Top Festive Badge */}
             <motion.div variants={itemVariants} className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#0F5132]/10 border border-[#0F5132]/25 text-[#0F5132] text-xs font-extrabold uppercase tracking-widest font-heading shadow-xs">
               <Sparkles className="w-4 h-4 text-[#D4A017] animate-spin" />
-              <span>COLLEGE UNION OFFICIAL FESTIVAL EVENT</span>
+              <span>COLLEGE OF ENGINEERING VADAKARA</span>
             </motion.div>
 
             {/* Main Heading */}
@@ -124,7 +124,7 @@ export const Hero = ({ className }) => {
                       <Star className="w-5 h-5 fill-[#D4A017]" />
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-slate-800 block font-heading">Thiruvonam 2026</span>
+                      <span className="text-xs font-bold text-slate-800 block font-heading">Onam Lucky Draw 2026</span>
                       <span className="text-[10px] text-slate-500 font-semibold font-sans">Live Staff Draw</span>
                     </div>
                   </div>

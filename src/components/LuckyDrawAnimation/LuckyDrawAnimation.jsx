@@ -26,12 +26,12 @@ export const LuckyDrawAnimation = ({
   const [finalWinner, setFinalWinner] = useState(null);
 
   const sampleParticipants = [
-    { ticket: '8942', name: 'Prof. Ananthakrishnan Nair', dept: 'Computer Science & Engineering', empId: 'EMP-9842', prize: '1st Grand Bumper: 1 Sovereign Gold + ₹50,000 Cash' },
-    { ticket: '8941', name: 'Dr. Sunitha Menon', dept: 'Electronics & Communication', empId: 'EMP-9841', prize: '2nd Prize: Half Sovereign Gold + ₹25,000 Cash' },
-    { ticket: '8940', name: 'Mr. Rajesh Varma', dept: 'Administration', empId: 'EMP-9840', prize: '3rd Prize: ₹15,000 Cash Reward' },
-    { ticket: '8939', name: 'Prof. Meera Pillai', dept: 'Mathematics', empId: 'EMP-8939', prize: 'Consolation Prize: ₹5,000 Cash Reward' },
-    { ticket: '8938', name: 'Dr. Vikram Shah', dept: 'Physics', empId: 'EMP-8938', prize: 'Consolation Prize: ₹5,000 Cash Reward' },
-    { ticket: '8937', name: 'Prof. Lakshmi R.', dept: 'Chemistry', empId: 'EMP-8937', prize: 'Consolation Prize: ₹5,000 Cash Reward' },
+    { ticket: '8942', name: 'Prof. Ananthakrishnan Nair', dept: 'Computer Science & Engineering', prize: '1st Grand Bumper: 1 Sovereign Gold + ₹50,000 Cash' },
+    { ticket: '8941', name: 'Dr. Sunitha Menon', dept: 'Electronics & Communication', prize: '2nd Prize: Half Sovereign Gold + ₹25,000 Cash' },
+    { ticket: '8940', name: 'Mr. Rajesh Varma', dept: 'Administration', prize: '3rd Prize: ₹15,000 Cash Reward' },
+    { ticket: '8939', name: 'Prof. Meera Pillai', dept: 'Mathematics', prize: 'Consolation Prize: ₹5,000 Cash Reward' },
+    { ticket: '8938', name: 'Dr. Vikram Shah', dept: 'Physics', prize: 'Consolation Prize: ₹5,000 Cash Reward' },
+    { ticket: '8937', name: 'Prof. Lakshmi R.', dept: 'Chemistry', prize: 'Consolation Prize: ₹5,000 Cash Reward' },
   ];
 
   // Animated Falling Flower Petals Array (30 Petals)
@@ -284,10 +284,8 @@ export const LuckyDrawAnimation = ({
                 <h3 className="text-2xl sm:text-3xl font-black text-[#0F5132] font-heading">
                   {finalWinner.name}
                 </h3>
-                <div className="flex justify-center gap-4 text-xs text-slate-600 font-sans pt-1">
+                <div className="text-xs text-slate-600 font-sans pt-1">
                   <span><strong>Dept:</strong> {finalWinner.dept}</span>
-                  <span>•</span>
-                  <span><strong>Emp ID:</strong> {finalWinner.empId}</span>
                 </div>
               </div>
 

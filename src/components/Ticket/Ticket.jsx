@@ -12,7 +12,6 @@ export const Ticket = ({
   ticketNumber = '8942',
   participantName = 'Prof. Ananthakrishnan Nair',
   department = 'Computer Science & Engineering',
-  employeeId = 'EMP-9842',
   paymentId = 'PAY-RZP-89420',
   amount = 150,
   drawDate = '2026-08-28T17:00:00+05:30',
@@ -62,7 +61,7 @@ export const Ticket = ({
               </div>
               <div>
                 <span className="text-xs font-black uppercase text-slate-500 tracking-widest block font-heading">
-                  COLLEGE UNION SECRETARIAT
+                  COLLEGE OF ENGINEERING VADAKARA
                 </span>
                 <h3 className="text-lg sm:text-xl font-black text-[#0F5132] font-heading leading-tight">
                   Onam Lucky Draw 2026
@@ -101,8 +100,8 @@ export const Ticket = ({
             </div>
           </div>
 
-          {/* Grid 6 Passenger Info Details */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs font-sans">
+          {/* Grid 5 Passenger Info Details */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs font-sans">
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
               <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider block font-heading">
                 PASSENGER / HOLDER
@@ -115,13 +114,6 @@ export const Ticket = ({
                 DEPARTMENT
               </span>
               <span className="font-extrabold text-slate-800 mt-0.5 block truncate">{department}</span>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-              <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider block font-heading">
-                EMPLOYEE ID
-              </span>
-              <span className="font-extrabold text-[#0F5132] mt-0.5 block font-mono">{employeeId}</span>
             </div>
 
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">

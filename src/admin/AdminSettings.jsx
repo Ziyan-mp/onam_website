@@ -36,7 +36,7 @@ export const AdminSettings = ({ className }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      collegeName: 'Government Engineering College Union',
+      collegeName: 'College of Engineering Vadakara',
       themePreset: 'kasavu-gold-emerald',
       razorpayKeyId: 'rzp_live_98420ONAM2026',
       razorpayKeySecret: 'w89420onamsecretkey2026',
@@ -105,7 +105,7 @@ export const AdminSettings = ({ className }) => {
             {/* College Name */}
             <Input
               label="College Institution Name *"
-              placeholder="e.g. Government Engineering College Union"
+              placeholder="e.g. College of Engineering Vadakara"
               leftIcon={Building2}
               error={errors.collegeName?.message}
               {...register('collegeName', { required: 'College Name is required' })}

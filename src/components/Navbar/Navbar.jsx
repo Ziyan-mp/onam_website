@@ -64,7 +64,7 @@ export const Navbar = ({ className }) => {
               </span>
             </div>
             <span className="text-[10px] font-extrabold text-slate-600 dark:text-amber-200/70 tracking-widest uppercase font-heading">
-              COLLEGE UNION DRAW
+              COLLEGE OF ENGINEERING VADAKARA
             </span>
           </div>
         </a>

@@ -93,7 +93,7 @@ export const FAQ = ({ className }) => {
     {
       question: 'Can I participate multiple times by purchasing more than 1 ticket?',
       answer:
-        'Yes! Staff members can purchase multiple ₹150 tickets to increase their chances of winning. Each ticket carries a unique ticket number registered under your Employee ID.',
+        'Yes! Staff members can purchase multiple ₹150 tickets to increase their chances of winning. Each ticket carries a unique ticket number registered under your name.',
     },
   ];
 
