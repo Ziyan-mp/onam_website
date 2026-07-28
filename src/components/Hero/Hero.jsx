@@ -46,7 +46,7 @@ export const Hero = ({ className }) => {
             {/* Top Festive Badge */}
             <motion.div variants={itemVariants} className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#0F5132]/10 border border-[#0F5132]/25 text-[#0F5132] text-xs font-extrabold uppercase tracking-widest font-heading shadow-xs">
               <Sparkles className="w-4 h-4 text-[#D4A017] animate-spin" />
-              <span>COLLEGE OF ENGINEERING VADAKARA</span>
+              <span>DEPARTMENT OF EC</span>
             </motion.div>
 
             {/* Main Heading */}

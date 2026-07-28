@@ -65,7 +65,7 @@ export const Timeline = ({ className }) => {
   ];
 
   return (
-    <section id="how-it-works" className={cn('py-20 md:py-28 relative bg-[#FFF9F0] overflow-hidden', className)}>
+    <section id="process" className={cn('py-20 md:py-28 relative bg-[#FFF9F0] overflow-hidden', className)}>
       {/* Background Decorative Glow */}
       <div className="absolute top-1/3 right-0 w-96 h-96 bg-[#D4A017]/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-80 h-80 bg-[#0F5132]/08 rounded-full blur-3xl pointer-events-none" />

@@ -8,6 +8,7 @@ import { PageLoader } from '../components/Loader';
 
 // Lazy Loaded Public Pages (Route Code Splitting)
 const HomePage = lazy(() => import('../pages/HomePage'));
+const ProcessPage = lazy(() => import('../pages/ProcessPage'));
 const DrawsPage = lazy(() => import('../pages/DrawsPage'));
 const PrizesPage = lazy(() => import('../pages/PrizesPage'));
 const TicketCheckoutPage = lazy(() => import('../pages/TicketCheckoutPage'));
@@ -32,6 +33,7 @@ export const AppRoutes = () => {
         {/* Public Event Portal Routes */}
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
+          <Route path="process" element={<ProcessPage />} />
           <Route path="draws" element={<DrawsPage />} />
           <Route path="prizes" element={<PrizesPage />} />
           <Route path="checkout" element={<TicketCheckoutPage />} />

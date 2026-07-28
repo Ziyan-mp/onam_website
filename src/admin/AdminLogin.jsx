@@ -139,7 +139,7 @@ export const AdminLogin = ({ className }) => {
                 href="#forgot-password"
                 onClick={(e) => {
                   e.preventDefault();
-                  toast.error('Contact Secretariat IT Desk (+91 0484 289-2026) to reset password.');
+                  toast.error('Contact Secretariat IT Desk (8157956164) to reset password.');
                 }}
                 className="font-bold text-[#0F5132] hover:text-amber-600 transition-colors font-heading"
               >

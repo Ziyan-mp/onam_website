@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sparkles, GraduationCap, Ticket, Trophy, ShieldCheck, Home, ArrowRight, Sun, Moon } from 'lucide-react';
 import { Button } from '../Button';
@@ -27,12 +28,12 @@ export const Navbar = ({ className }) => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#home', icon: Home },
-    { name: 'About', href: '#about', icon: Sparkles },
-    { name: 'Process', href: '#process', icon: Ticket },
-    { name: 'Bumper Prizes', href: '#prizes', icon: Trophy },
-    { name: 'Verify Ticket', href: '#verify', icon: ShieldCheck },
-    { name: 'FAQ', href: '#faq', icon: Sparkles },
+    { name: 'Home', href: '/', icon: Home, isRoute: true },
+    { name: 'About', href: '/#about', icon: Sparkles, isRoute: false },
+    { name: 'Process', href: '/process', icon: Ticket, isRoute: true },
+    { name: 'Bumper Prizes', href: '/#prizes', icon: Trophy, isRoute: false },
+    { name: 'Verify Ticket', href: '/#verify', icon: ShieldCheck, isRoute: false },
+    { name: 'FAQ', href: '/#faq', icon: Sparkles, isRoute: false },
   ];
 
   return (
@@ -47,7 +48,7 @@ export const Navbar = ({ className }) => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand Logo & Emblem */}
-        <a href="/" className="flex items-center gap-3 group">
+        <Link to="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-[#D4A017] to-[#E5B83B] p-0.5 shadow-md">
             <div className="w-full h-full bg-[#0F5132] rounded-[14px] flex items-center justify-center">
               <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4A017] group-hover:rotate-12 transition-transform duration-300" />
@@ -57,30 +58,60 @@ export const Navbar = ({ className }) => {
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
               <span className="text-base sm:text-lg font-black tracking-tight text-[#0F5132] dark:text-[#D4A017] uppercase font-heading">
-                ONAM 2026
+                PONNONAM
               </span>
               <span className="px-1.5 py-0.5 rounded bg-[#D4A017] text-[#0F5132] text-[9px] font-black uppercase font-heading shadow-xs">
                 OFFICIAL
               </span>
             </div>
             <span className="text-[10px] font-extrabold text-slate-600 dark:text-amber-200/70 tracking-widest uppercase font-heading">
-              COLLEGE OF ENGINEERING VADAKARA
+              DEPARTMENT OF EC
             </span>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Navigation Links */}
         <nav className="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-wider font-heading">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="text-slate-700 dark:text-amber-100 hover:text-[#0F5132] dark:hover:text-[#D4A017] transition-colors relative py-1 group"
-            >
-              <span>{link.name}</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#D4A017] transition-all duration-300 group-hover:w-full" />
-            </a>
-          ))}
+          {navLinks.map((link) => {
+            if (link.isRoute) {
+              return (
+                <NavLink
+                  key={link.name}
+                  to={link.href}
+                  end={link.href === '/'}
+                  className={({ isActive }) =>
+                    cn(
+                      'text-slate-700 dark:text-amber-100 hover:text-[#0F5132] dark:hover:text-[#D4A017] transition-colors relative py-1 group',
+                      isActive && 'text-[#0F5132] dark:text-[#D4A017] font-black'
+                    )
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span>{link.name}</span>
+                      <span
+                        className={cn(
+                          'absolute bottom-0 left-0 h-0.5 bg-[#D4A017] transition-all duration-300',
+                          isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                        )}
+                      />
+                    </>
+                  )}
+                </NavLink>
+              );
+            }
+
+            return (
+              <a
+                key={link.name}
+                href={link.href}
+                className="text-slate-700 dark:text-amber-100 hover:text-[#0F5132] dark:hover:text-[#D4A017] transition-colors relative py-1 group"
+              >
+                <span>{link.name}</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#D4A017] transition-all duration-300 group-hover:w-full" />
+              </a>
+            );
+          })}
         </nav>
 
         {/* Right Action CTA & Dark Mode Toggle */}
@@ -95,11 +126,11 @@ export const Navbar = ({ className }) => {
           </button>
 
           {/* Admin Login CTA Link */}
-          <a href="/admin/login" className="hidden sm:inline-block">
+          <Link to="/admin/login" className="hidden sm:inline-block">
             <Button variant="outline" size="sm" className="border-[#0F5132]/30 dark:border-[#D4A017]/40 text-[#0F5132] dark:text-[#D4A017] hover:bg-[#0F5132]/10">
               Admin Portal
             </Button>
-          </a>
+          </Link>
 
           {/* Participate Now CTA Button */}
           <a href="#register" className="hidden sm:inline-block">
@@ -157,6 +188,33 @@ export const Navbar = ({ className }) => {
                 <nav className="space-y-2">
                   {navLinks.map((link) => {
                     const IconComp = link.icon;
+                    if (link.isRoute) {
+                      return (
+                        <NavLink
+                          key={link.name}
+                          to={link.href}
+                          end={link.href === '/'}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={({ isActive }) =>
+                            cn(
+                              'flex items-center justify-between p-3 rounded-2xl text-xs font-black uppercase tracking-wider font-heading transition-colors',
+                              isActive
+                                ? 'bg-[#0F5132] text-white dark:bg-[#0F5132]'
+                                : 'text-slate-800 dark:text-white hover:bg-[#0F5132]/10 dark:hover:bg-[#0F5132]'
+                            )
+                          }
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-xl bg-white dark:bg-[#0F5132] border border-amber-200/80 dark:border-[#D4A017]/30 text-[#0F5132] dark:text-[#D4A017]">
+                              <IconComp className="w-4 h-4" />
+                            </div>
+                            <span>{link.name}</span>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-slate-400" />
+                        </NavLink>
+                      );
+                    }
+
                     return (
                       <a
                         key={link.name}

@@ -95,11 +95,11 @@ export const Footer = ({ className }) => {
             <ul className="space-y-3 text-xs font-sans text-amber-100/80">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#D4A017] shrink-0 mt-0.5" />
-                <span>College of Engineering Vadakara</span>
+                <span>DEPARTMENT OF EC</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#D4A017] shrink-0" />
-                <span>+91 (0484) 289-2026</span>
+                <span>8157956164</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#D4A017] shrink-0" />
@@ -138,7 +138,7 @@ export const Footer = ({ className }) => {
         <div className="pt-8 border-t border-[#167448] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-amber-200/70 font-sans">
           <p>© 2026 Onam Lucky Draw Secretariat. All rights reserved.</p>
           <p className="flex items-center gap-1">
-            Crafted with <Heart className="w-3.5 h-3.5 text-[#8B1E3F] fill-[#8B1E3F] inline" /> for College of Engineering Vadakara Onam 2026
+            Crafted with <Heart className="w-3.5 h-3.5 text-[#8B1E3F] fill-[#8B1E3F] inline" /> for DEPARTMENT OF EC PONNONAM
           </p>
         </div>
       </div>
