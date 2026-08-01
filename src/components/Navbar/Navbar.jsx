@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sparkles, GraduationCap, Ticket, Trophy, ShieldCheck, Home, ArrowRight, Sun, Moon } from 'lucide-react';
+import { Menu, X, GraduationCap, Ticket, Trophy, Star, Home, ArrowRight } from 'lucide-react';
 import { Button } from '../Button';
-import { useTheme } from '../../context/ThemeContext';
+
 import { cn } from '../../utils/cn';
 
 /**
@@ -12,7 +12,7 @@ import { cn } from '../../utils/cn';
 export const Navbar = ({ className }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isDark, toggleTheme } = useTheme();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,20 +29,17 @@ export const Navbar = ({ className }) => {
 
   const navLinks = [
     { name: 'Home', href: '/', icon: Home, isRoute: true },
-    { name: 'About', href: '/#about', icon: Sparkles, isRoute: false },
-    { name: 'Process', href: '/process', icon: Ticket, isRoute: true },
+    { name: 'How It Works', href: '/#process', icon: Ticket, isRoute: false },
+    { name: 'Registration', href: '/#register', icon: Star, isRoute: false },
     { name: 'Bumper Prizes', href: '/#prizes', icon: Trophy, isRoute: false },
-    { name: 'Verify Ticket', href: '/#verify', icon: ShieldCheck, isRoute: false },
-    { name: 'FAQ', href: '/#faq', icon: Sparkles, isRoute: false },
+    { name: 'Winners', href: '/#winners', icon: Star, isRoute: false },
   ];
 
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-40 transition-all duration-300',
-        isScrolled
-          ? 'bg-white/95 dark:bg-[#062617]/95 backdrop-blur-md shadow-soft border-b border-amber-200/60 dark:border-[#D4A017]/30 py-3'
-          : 'bg-transparent py-5',
+        'fixed top-0 left-0 right-0 z-40 transition-all duration-300 bg-[#0F5132] border-b border-[#D4A017]/30 py-3',
+        isScrolled ? 'shadow-[0_4px_24px_rgba(15,81,50,0.4)]' : 'shadow-sm',
         className
       )}
     >
@@ -57,14 +54,14 @@ export const Navbar = ({ className }) => {
 
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <span className="text-base sm:text-lg font-black tracking-tight text-[#0F5132] dark:text-[#D4A017] uppercase font-heading">
+              <span className="text-base sm:text-lg font-black tracking-tight text-white uppercase font-heading">
                 PONNONAM
               </span>
               <span className="px-1.5 py-0.5 rounded bg-[#D4A017] text-[#0F5132] text-[9px] font-black uppercase font-heading shadow-xs">
                 OFFICIAL
               </span>
             </div>
-            <span className="text-[10px] font-extrabold text-slate-600 dark:text-amber-200/70 tracking-widest uppercase font-heading">
+            <span className="text-[10px] font-extrabold text-amber-200/80 tracking-widest uppercase font-heading">
               DEPARTMENT OF EC
             </span>
           </div>
@@ -81,8 +78,8 @@ export const Navbar = ({ className }) => {
                   end={link.href === '/'}
                   className={({ isActive }) =>
                     cn(
-                      'text-slate-700 dark:text-amber-100 hover:text-[#0F5132] dark:hover:text-[#D4A017] transition-colors relative py-1 group',
-                      isActive && 'text-[#0F5132] dark:text-[#D4A017] font-black'
+                      'text-white/80 hover:text-[#D4A017] transition-colors relative py-1 group',
+                      isActive && 'text-[#D4A017] font-black'
                     )
                   }
                 >
@@ -102,48 +99,35 @@ export const Navbar = ({ className }) => {
             }
 
             return (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
-                className="text-slate-700 dark:text-amber-100 hover:text-[#0F5132] dark:hover:text-[#D4A017] transition-colors relative py-1 group"
+                to={link.href}
+                className="text-white/80 hover:text-[#D4A017] transition-colors relative py-1 group"
               >
                 <span>{link.name}</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#D4A017] transition-all duration-300 group-hover:w-full" />
-              </a>
+              </Link>
             );
           })}
         </nav>
 
         {/* Right Action CTA & Dark Mode Toggle */}
         <div className="flex items-center gap-3">
-          {/* Dark Mode Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle Dark Mode Theme"
-            className="p-2.5 rounded-2xl bg-white dark:bg-[#0A3722] border border-amber-200 dark:border-[#D4A017]/40 text-[#0F5132] dark:text-[#D4A017] hover:scale-105 transition-all shadow-xs"
-          >
-            {isDark ? <Sun className="w-5 h-5 text-[#D4A017]" /> : <Moon className="w-5 h-5 text-[#0F5132]" />}
-          </button>
+
 
           {/* Admin Login CTA Link */}
           <Link to="/admin/login" className="hidden sm:inline-block">
-            <Button variant="outline" size="sm" className="border-[#0F5132]/30 dark:border-[#D4A017]/40 text-[#0F5132] dark:text-[#D4A017] hover:bg-[#0F5132]/10">
+            <Button variant="outline" size="sm" className="border-[#D4A017]/60 text-[#D4A017] hover:bg-[#D4A017]/15 bg-transparent">
               Admin Portal
             </Button>
           </Link>
 
-          {/* Participate Now CTA Button */}
-          <a href="#register" className="hidden sm:inline-block">
-            <Button variant="primary" size="sm" className="shadow-xs font-heading">
-              Participate ₹150
-            </Button>
-          </a>
 
           {/* Mobile Navigation Drawer Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle Navigation Menu"
-            className="lg:hidden p-2.5 rounded-2xl bg-white dark:bg-[#0A3722] border border-amber-200 dark:border-[#D4A017]/40 text-slate-800 dark:text-white hover:text-[#0F5132] shadow-xs active:scale-95 transition-transform"
+            className="lg:hidden p-2.5 rounded-2xl bg-[#0A3722] border border-[#D4A017]/40 text-white hover:text-[#D4A017] shadow-xs active:scale-95 transition-transform"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -167,25 +151,24 @@ export const Navbar = ({ className }) => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 280 }}
-              className="fixed top-0 bottom-0 right-0 w-80 max-w-[85vw] bg-[#FFF9F0] dark:bg-[#0A3722] z-50 lg:hidden shadow-2xl flex flex-col justify-between p-6 border-l border-amber-200 dark:border-[#D4A017]/30"
+              className="fixed top-0 bottom-0 right-0 w-80 max-w-[85vw] bg-[#FFF9F0] dark:bg-[#0A3722] z-50 lg:hidden shadow-2xl flex flex-col p-6 border-l border-amber-200 dark:border-[#D4A017]/30"
             >
-              <div className="space-y-6">
-                <div className="flex items-center justify-between border-b border-amber-200/80 dark:border-[#D4A017]/30 pb-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-[#0F5132] text-[#D4A017] flex items-center justify-center">
-                      <GraduationCap className="w-4 h-4" />
-                    </div>
-                    <span className="text-sm font-black text-[#0F5132] dark:text-[#D4A017] font-heading uppercase">Navigation</span>
+              <div className="flex items-center justify-between border-b border-amber-200/80 dark:border-[#D4A017]/30 pb-4 mb-6 shrink-0">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-[#0F5132] text-[#D4A017] flex items-center justify-center">
+                    <GraduationCap className="w-4 h-4" />
                   </div>
-                  <button
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2 rounded-xl text-slate-500 hover:bg-amber-100/80 dark:hover:bg-[#0F5132]"
-                  >
-                    <X className="w-5 h-5 text-slate-700 dark:text-white" />
-                  </button>
+                  <span className="text-sm font-black text-[#0F5132] dark:text-[#D4A017] font-heading uppercase">Navigation</span>
                 </div>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-xl text-slate-500 hover:bg-amber-100/80 dark:hover:bg-[#0F5132]"
+                >
+                  <X className="w-5 h-5 text-slate-700 dark:text-white" />
+                </button>
+              </div>
 
-                <nav className="space-y-2">
+              <nav className="space-y-2 flex-1 overflow-y-auto min-h-0 pr-2">
                   {navLinks.map((link) => {
                     const IconComp = link.icon;
                     if (link.isRoute) {
@@ -216,9 +199,9 @@ export const Navbar = ({ className }) => {
                     }
 
                     return (
-                      <a
+                      <Link
                         key={link.name}
-                        href={link.href}
+                        to={link.href}
                         onClick={() => setMobileMenuOpen(false)}
                         className="flex items-center justify-between p-3 rounded-2xl text-xs font-black text-slate-800 dark:text-white uppercase tracking-wider font-heading hover:bg-[#0F5132]/10 dark:hover:bg-[#0F5132] transition-colors"
                       >
@@ -229,19 +212,11 @@ export const Navbar = ({ className }) => {
                           <span>{link.name}</span>
                         </div>
                         <ArrowRight className="w-4 h-4 text-slate-400" />
-                      </a>
+                      </Link>
                     );
                   })}
-                </nav>
-              </div>
+              </nav>
 
-              <div className="pt-6 border-t border-amber-200/80 dark:border-[#D4A017]/30 space-y-3">
-                <a href="#register" onClick={() => setMobileMenuOpen(false)} className="block">
-                  <Button variant="primary" size="md" className="w-full justify-center font-heading">
-                    Participate Now (₹150)
-                  </Button>
-                </a>
-              </div>
             </motion.div>
           </>
         )}

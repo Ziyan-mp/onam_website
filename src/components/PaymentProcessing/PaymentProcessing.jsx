@@ -10,7 +10,6 @@ export const PaymentProcessing = ({
   isOpen = true,
   amount = 150,
   participantName = 'Prof. Staff Member',
-  onComplete,
   className,
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -25,21 +24,20 @@ export const PaymentProcessing = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    // Advance steps automatically
+    setCurrentStep(0);
+
     const interval = setInterval(() => {
       setCurrentStep((prev) => {
         if (prev < processingSteps.length - 1) {
           return prev + 1;
-        } else {
-          clearInterval(interval);
-          if (onComplete) onComplete();
-          return prev;
         }
+
+        return prev;
       });
     }, 1200);
 
     return () => clearInterval(interval);
-  }, [isOpen, onComplete]);
+  }, [isOpen]);
 
   return (
     <AnimatePresence>

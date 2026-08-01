@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef } from "react";
 import { motion } from 'framer-motion';
 import { GraduationCap, QrCode, Sparkles, ShieldCheck, Download, Printer } from 'lucide-react';
 import { Button } from '../Button';
 import { formatDate, formatCurrency } from '../../utils/formatters';
 import { cn } from '../../utils/cn';
-
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 /**
  * Ultra-Luxury Onam Festival Horizontal Boarding Pass Ticket Component
  */
@@ -19,13 +20,12 @@ export const Ticket = ({
   status = 'CONFIRMED',
   className,
 }) => {
+  const ticketRef = useRef(null);
   const handlePrint = () => {
     window.print();
   };
 
-  const formattedTicketCode = ticketNumber.startsWith('PON-')
-    ? ticketNumber
-    : `PON-2026-${ticketNumber}`;
+  const formattedTicketCode = ticketNumber;
 
   return (
     <div className={cn('w-full max-w-5xl mx-auto space-y-6', className)}>
@@ -33,6 +33,8 @@ export const Ticket = ({
       <div className="w-full overflow-x-auto pb-4 pt-1 scrollbar-thin">
         {/* Main Boarding Pass Card Frame - Fixed 2.4:1 Aspect Ratio Landscape Shell */}
         <motion.div
+          ref={ticketRef}
+          id="ticket"
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, type: 'spring' }}

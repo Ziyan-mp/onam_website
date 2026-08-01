@@ -10,11 +10,10 @@ import { cn } from '../../utils/cn';
 export const Footer = ({ className }) => {
   const quickLinks = [
     { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
-    { label: 'How It Works', href: '#how-it-works' },
-    { label: 'Prizes', href: '#prizes' },
-    { label: 'FAQ', href: '#faq' },
-    { label: 'Register & Pay', href: '#register' },
+    { label: 'Process', href: '/process' },
+    { label: 'Registration', href: '#register' },
+    { label: 'Bumper Prizes', href: '#prizes' },
+    { label: 'Winners', href: '#winners' },
   ];
 
   const socialLinks = [
@@ -63,28 +62,12 @@ export const Footer = ({ className }) => {
                 </div>
               </div>
               <span className="text-lg font-black text-white uppercase tracking-tight font-heading">
-                ONAM DRAW 2026
+                ONAM LUCKY DRAW 2026
               </span>
             </div>
             <p className="text-xs text-amber-100/75 leading-relaxed font-sans max-w-xs">
               Official Teachers & Staff Thiruvonam Lucky Draw. Celebrating togetherness with transparent digital prize distribution.
             </p>
-          </div>
-
-          {/* Col 2: Quick Links */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-black text-[#D4A017] uppercase tracking-widest font-heading">
-              Quick Links
-            </h4>
-            <ul className="space-y-2.5 text-xs font-sans text-amber-100/80">
-              {quickLinks.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="hover:text-[#D4A017] transition-colors">
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* Col 3: Contact */}
@@ -106,31 +89,6 @@ export const Footer = ({ className }) => {
                 <span>support@onamluckydraw2026.com</span>
               </li>
             </ul>
-          </div>
-
-          {/* Col 4: Social Media */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-black text-[#D4A017] uppercase tracking-widest font-heading">
-              Social Media
-            </h4>
-            <div className="flex flex-wrap items-center gap-2.5">
-              {socialLinks.map((item) => {
-                const SocialIcon = item.icon;
-                return (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    aria-label={item.label}
-                    className="p-3 rounded-2xl bg-[#0A3722] border border-[#D4A017]/30 text-[#D4A017] hover:bg-[#D4A017] hover:text-[#0F5132] transition-colors shadow-xs"
-                  >
-                    <SocialIcon className="w-4 h-4" />
-                  </a>
-                );
-              })}
-            </div>
-            <p className="text-[11px] text-amber-200/60 font-sans pt-1">
-              Follow our official channels for live draw announcements.
-            </p>
           </div>
         </div>
 

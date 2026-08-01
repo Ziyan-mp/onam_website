@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Sparkles, Ticket, Trophy, ArrowRight, Star } from 'lucide-react';
 import { Button } from '../Button';
 import { Countdown } from '../Countdown';
-import { Statistics } from '../Statistics';
 import { cn } from '../../utils/cn';
 
 /**
@@ -71,7 +70,7 @@ export const Hero = ({ className }) => {
                 </span>
               </div>
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed pt-2 font-sans max-w-xl">
-                Join the official college Onam celebration! Win exciting cash prizes, gold coins, and festive hampers in a transparent and live digital lucky draw.
+                Join the official College Onam celebration! Win exciting prizes and live digital lucky draw.
               </p>
             </motion.div>
 
@@ -137,10 +136,6 @@ export const Hero = ({ className }) => {
           </motion.div>
         </motion.div>
 
-        {/* Bottom Section: Four Statistic Cards */}
-        <div className="pt-6 border-t border-[#D4A017]/25">
-          <Statistics />
-        </div>
       </div>
     </section>
   );
