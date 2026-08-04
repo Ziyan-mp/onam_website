@@ -8,7 +8,7 @@ import { cn } from '../../utils/cn';
  * Optimized & Memoized PrizeCard Component
  */
 export const PrizeCard = memo(({
-  title = 'Grand Thiruvonam Bumper',
+  title = 'Grand Bumper',
   subtitle = '1st Prize',
   amount = 0,
   perks = [],

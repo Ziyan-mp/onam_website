@@ -17,9 +17,14 @@ export const DrawProvider = ({ children }) => {
 
   const [myTickets, setMyTickets] = useState([]);
   const [selectedTicketCount, setSelectedTicketCount] = useState(1);
+  const [lastDrawTime, setLastDrawTime] = useState(Date.now());
 
   const addTickets = (newTickets) => {
     setMyTickets((prev) => [...prev, ...newTickets]);
+  };
+
+  const triggerDrawRefresh = () => {
+    setLastDrawTime(Date.now());
   };
 
   return (
@@ -31,6 +36,8 @@ export const DrawProvider = ({ children }) => {
         addTickets,
         selectedTicketCount,
         setSelectedTicketCount,
+        lastDrawTime,
+        triggerDrawRefresh,
       }}
     >
       {children}

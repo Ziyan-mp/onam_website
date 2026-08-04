@@ -17,6 +17,7 @@ import { PaymentProcessing } from '../PaymentProcessing';
 import { Ticket as TicketCard } from '../Ticket';
 import { Modal } from '../Modal';
 import { cn } from '../../utils/cn';
+import { useSettings } from '../../context/SettingsContext';
 
 import {
   createOrder,
@@ -33,6 +34,8 @@ export const RegistrationForm = ({ className }) => {
   const [issuedTicket, setIssuedTicket] = useState(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+  const { settings } = useSettings();
+
   const {
     register,
     handleSubmit,
@@ -44,7 +47,7 @@ export const RegistrationForm = ({ className }) => {
       department: '',
       phone: '',
       email: '',
-      amount: 150,
+      amount: settings?.entryFee || 150,
     },
   });
 
@@ -68,7 +71,7 @@ export const RegistrationForm = ({ className }) => {
       // STEP 2: Create Razorpay Order on Backend
       // --------------------------------------------------
 
-      const response = await createOrder(150);
+      const response = await createOrder(settings?.entryFee || 150);
 
       if (!response.success) {
         toast.error(
@@ -89,7 +92,7 @@ export const RegistrationForm = ({ className }) => {
         amount: order.amount,
         currency: order.currency,
 
-        name: 'PONNONAM 2026',
+        name: settings?.eventName || 'Onam Lucky Draw',
         description: 'Lucky Draw Registration',
 
         order_id: order.id,
@@ -251,7 +254,7 @@ export const RegistrationForm = ({ className }) => {
 
       <PaymentProcessing
         isOpen={isProcessingPayment}
-        amount={150}
+        amount={settings?.entryFee || 150}
       />
 
       {/* ----------------------------------------------- */}
@@ -272,7 +275,7 @@ export const RegistrationForm = ({ className }) => {
               department={issuedTicket.department}
               phoneNumber={issuedTicket.phone}
               paymentId={issuedTicket.id}
-              amount={150}
+              amount={settings?.entryFee || 150}
             />
 
             <Button
@@ -304,13 +307,13 @@ export const RegistrationForm = ({ className }) => {
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-black text-[#0F5132] tracking-tight font-heading">
-            Onam Lucky Draw Registration
+            {settings?.eventName || 'Onam Lucky Draw'} Registration
           </h2>
 
           <p className="text-slate-600 text-sm font-sans">
             Fill in your staff details below to purchase
-            your official ₹150 entry ticket for the
-            Thiruvonam 2026 Bumper Draw.
+            your official ₹{settings?.entryFee || 150} entry ticket for the
+            draw.
           </p>
         </div>
 
@@ -449,7 +452,7 @@ export const RegistrationForm = ({ className }) => {
                 leftIcon={CreditCard}
                 className="w-full py-4 text-base font-black tracking-wide shadow-md shadow-[#0F5132]/20"
               >
-                Proceed to Razorpay (Pay ₹150)
+                Proceed to Razorpay (Pay ₹{settings?.entryFee || 150})
               </Button>
             </div>
           </form>

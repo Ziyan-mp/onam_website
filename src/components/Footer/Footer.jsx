@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sparkles, MapPin, Phone, Mail, Heart, Share2, Globe, Send, MessageCircle } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import { useSettings } from '../../context/SettingsContext';
 
 /**
  * Elegant Minimal Onam Theme Footer Component
@@ -8,6 +9,7 @@ import { cn } from '../../utils/cn';
  * Display: Happy Onam, ഓണാശംസകൾ
  */
 export const Footer = ({ className }) => {
+  const { settings } = useSettings();
   const quickLinks = [
     { label: 'Home', href: '#home' },
     { label: 'Process', href: '/process' },
@@ -47,7 +49,7 @@ export const Footer = ({ className }) => {
             </div>
           </div>
           <span className="text-xs font-extrabold uppercase tracking-wider px-4 py-2 rounded-full bg-[#D4A017] text-[#0F5132] font-heading">
-            THIRUVONAM 2026
+            {settings?.eventName || 'THIRUVONAM 2026'}
           </span>
         </div>
 
@@ -62,11 +64,11 @@ export const Footer = ({ className }) => {
                 </div>
               </div>
               <span className="text-lg font-black text-white uppercase tracking-tight font-heading">
-                ONAM LUCKY DRAW 2026
+                {settings?.eventName || 'ONAM LUCKY DRAW 2026'}
               </span>
             </div>
             <p className="text-xs text-amber-100/75 leading-relaxed font-sans max-w-xs">
-              Official Teachers & Staff Thiruvonam Lucky Draw. Celebrating togetherness with transparent digital prize distribution.
+              Official Teachers & Staff Lucky Draw. Celebrating togetherness with transparent digital prize distribution.
             </p>
           </div>
 
@@ -96,7 +98,7 @@ export const Footer = ({ className }) => {
         <div className="pt-8 border-t border-[#167448] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-amber-200/70 font-sans">
           <p>© 2026 Onam Lucky Draw Secretariat. All rights reserved.</p>
           <p className="flex items-center gap-1">
-            Crafted with <Heart className="w-3.5 h-3.5 text-[#8B1E3F] fill-[#8B1E3F] inline" /> for DEPARTMENT OF EC PONNONAM
+            Crafted with <Heart className="w-3.5 h-3.5 text-[#8B1E3F] fill-[#8B1E3F] inline" /> for DEPARTMENT OF EC
           </p>
         </div>
       </div>

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import { Crown, Sparkles, Trophy, CheckCircle2, X, Star, Coins, Gift } from 'lucide-react';
 import { Button } from '../Button';
 import { formatCurrency, formatTicketId } from '../../utils/formatters';
 import { cn } from '../../utils/cn';
+import { executeDraw } from '../../services/adminApi';
 
 /**
  * Ultra-Premium 8-Second Fullscreen Lucky Draw Animation
@@ -50,6 +52,23 @@ export const LuckyDrawAnimation = ({
     // Prevent running twice lock
     setHasRun(true);
 
+    // Fetch the real winner from backend
+    let realWinner = null;
+    executeDraw().then(response => {
+      if (response.success && response.winner) {
+        realWinner = {
+          ticket: response.winner.ticketCode,
+          name: response.winner.purchaserName,
+          dept: response.winner.department,
+          prize: response.winner.prizeTitle
+        };
+      }
+    }).catch(error => {
+      console.error("Failed to execute draw", error);
+      toast.error(error.message || "Failed to execute draw. Check if there are eligible tickets.");
+      onClose();
+    });
+
     // 0s-3s: Countdown (3, 2, 1)
     setStage('COUNTDOWN');
     setCountdownNum(3);
@@ -86,7 +105,11 @@ export const LuckyDrawAnimation = ({
 
     // 8s: Reveal Winner Card
     const winnerTimer = setTimeout(() => {
-      const winner = sampleParticipants[0]; // 1st Bumper Winner
+      if (!realWinner) {
+        onClose();
+        return;
+      }
+      const winner = realWinner;
       setFinalWinner(winner);
       setStage('WINNER');
       if (onWinnerDeclared) onWinnerDeclared(winner);
@@ -239,7 +262,7 @@ export const LuckyDrawAnimation = ({
 
             <div className="flex items-center gap-2 text-xs font-bold text-amber-200 font-heading">
               <div className="w-3 h-3 rounded-full bg-[#D4A017] animate-ping" />
-              <span>Selecting Thiruvonam Bumper Winner...</span>
+              <span>Selecting Bumper Winner...</span>
             </div>
           </motion.div>
         )}

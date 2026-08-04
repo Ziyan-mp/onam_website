@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
-import { 
-  Calendar, 
-  Coins, 
-  Target, 
-  Trophy, 
-  Upload, 
-  Save, 
-  Sparkles, 
-  Clock, 
-  Users, 
-  Play, 
-  Lock, 
-  Unlock, 
-  CheckCircle2, 
-  AlertTriangle, 
+import {
+  Calendar,
+  Coins,
+  Target,
+  Trophy,
+  Upload,
+  Save,
+  Sparkles,
+  Clock,
+  Users,
+  Play,
+  Lock,
+  Unlock,
+  CheckCircle2,
+  AlertTriangle,
   HelpCircle,
   FileText
 } from 'lucide-react';
@@ -26,6 +26,9 @@ import { ProgressBar } from '../components/ProgressBar';
 import { WinnerDrawModal } from './WinnerDrawModal';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import { cn } from '../utils/cn';
+import { getDrawStatus, updateSettings } from '../services/adminApi';
+import { useSettings } from '../context/SettingsContext';
+import { useDraw } from '../hooks/useDraw';
 
 /**
  * Lucky Draw Controller & Event Management Page Component
@@ -35,11 +38,59 @@ export const ManageDraws = ({ className }) => {
   const [isWinnerModalOpen, setIsWinnerModalOpen] = useState(false);
   const [adminTestingOverride, setAdminTestingOverride] = useState(false);
 
-  // Event Config Values
-  const targetAmount = 150000;
-  const [collectedAmount, setCollectedAmount] = useState(102600);
-  const participantCount = 684;
-  const targetDateStr = '2026-08-28T17:00:00+05:30';
+  const [status, setStatus] = useState({
+    targetAmount: 150000,
+    targetDate: new Date('2026-08-28T17:00:00+05:30').toISOString(),
+    collectedAmount: 0,
+    participantCount: 0
+  });
+
+
+
+  const { settings, refreshSettings } = useSettings();
+  const { lastDrawTime } = useDraw();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      eventName: '',
+      targetAmount: 150000,
+      entryFee: 150,
+    },
+  });
+
+  React.useEffect(() => {
+    if (settings) {
+      reset({
+        eventName: settings.eventName,
+        targetAmount: settings.targetAmount,
+        entryFee: settings.entryFee,
+      });
+    }
+  }, [settings, reset]);
+
+  React.useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const statusRes = await getDrawStatus();
+        if (statusRes.success) {
+          setStatus(statusRes.status);
+        }
+      } catch (error) {
+        console.error("Failed to fetch status", error);
+      }
+    };
+    fetchStatus();
+  }, [lastDrawTime]);
+
+  const targetAmount = status.targetAmount;
+  const collectedAmount = status.collectedAmount;
+  const participantCount = status.participantCount;
+  const targetDateStr = status.targetDate;
 
   // Conditional Logic Checks
   const isTargetAchieved = collectedAmount >= targetAmount;
@@ -48,32 +99,29 @@ export const ManageDraws = ({ className }) => {
   // Button disabled condition: Disabled UNTIL Target Achieved OR Target Date Reached
   const canStartDraw = isTargetAchieved || isTargetDateReached || adminTestingOverride;
 
-  const progressPercentage = Math.min(100, (collectedAmount / targetAmount) * 100);
+  const progressPercentage = targetAmount > 0 ? Math.min(100, (collectedAmount / targetAmount) * 100) : 0;
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      eventName: 'Thiruvonam Mega Staff Lucky Draw 2026',
-      entryFee: 150,
-      targetAmount: targetAmount,
-      targetDate: '2026-08-28T17:00',
-      regStart: '2026-08-01T09:00',
-      regEnd: '2026-08-28T12:00',
-      prizeName: '1st Bumper: 1 Sovereign Gold Coin (8g) + ₹50,000 Cash Reward',
-    },
-  });
-
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setIsSaving(true);
     toast.loading('Saving Event Configuration...', { id: 'save-event' });
 
-    setTimeout(() => {
+    try {
+      const response = await updateSettings({
+        eventName: data.eventName,
+        targetAmount: Number(data.targetAmount),
+        entryFee: Number(data.entryFee)
+      });
+      if (response.success) {
+        toast.success(`Event configuration saved!`, { id: 'save-event' });
+        // Update local status with new target amount
+        setStatus(prev => ({ ...prev, targetAmount: response.settings.targetAmount }));
+        refreshSettings();
+      }
+    } catch (error) {
+      toast.error('Failed to save settings', { id: 'save-event' });
+    } finally {
       setIsSaving(false);
-      toast.success(`Event configuration saved!`, { id: 'save-event' });
-    }, 1000);
+    }
   };
 
   return (
@@ -87,9 +135,6 @@ export const ManageDraws = ({ className }) => {
       {/* Top Banner Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-amber-200/90 shadow-soft">
         <div>
-          <span className="text-xs font-black uppercase text-[#D4A017] tracking-widest block font-heading">
-            SECRETARIAT CONTROLLER
-          </span>
           <h1 className="text-2xl sm:text-3xl font-black text-[#0F5132] font-heading mt-1">
             Lucky Draw Controller
           </h1>
@@ -137,7 +182,7 @@ export const ManageDraws = ({ className }) => {
                 AUTOMATED RNG CONTROLLER
               </span>
               <h2 className="text-2xl font-black text-slate-800 font-heading">
-                Thiruvonam 2026 Bumper Draw
+                {settings?.eventName || 'Lucky Draw'}
               </h2>
             </div>
           </div>
@@ -179,7 +224,7 @@ export const ManageDraws = ({ className }) => {
               <Coins className="w-4 h-4 text-[#0F5132]" />
             </div>
             <p className="text-2xl font-black text-[#0F5132] font-heading">{formatCurrency(collectedAmount)}</p>
-            <span className="text-[11px] text-slate-500 font-sans block">From 684 Paid Tickets</span>
+            <span className="text-[11px] text-slate-500 font-sans block">From {participantCount} Paid Tickets</span>
           </div>
 
           {/* 3. Participants */}
@@ -203,7 +248,7 @@ export const ManageDraws = ({ className }) => {
               <Calendar className="w-4 h-4 text-[#0F5132]" />
             </div>
             <p className="text-base font-black text-slate-800 font-heading mt-1">{formatDate(targetDateStr)}</p>
-            <span className="text-[11px] text-slate-500 font-sans block">Scheduled Thiruvonam Draw</span>
+            <span className="text-[11px] text-slate-500 font-sans block">Scheduled PONNONAM Draw</span>
           </div>
         </div>
 
@@ -222,7 +267,7 @@ export const ManageDraws = ({ className }) => {
           <Button
             variant="primary"
             size="lg"
-            isDisabled={!canStartDraw}
+            isDisabled={!canStartDraw || isWinnerModalOpen}
             leftIcon={Play}
             onClick={() => setIsWinnerModalOpen(true)}
             className="w-full py-5 text-lg font-black tracking-wide shadow-lg shadow-[#0F5132]/25 font-heading"
@@ -276,24 +321,20 @@ export const ManageDraws = ({ className }) => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <Input
             label="Event Name *"
-            placeholder="e.g. Thiruvonam Mega Staff Lucky Draw 2026"
+            placeholder="e.g. PONNONAM Mega Staff Lucky Draw 2026"
             leftIcon={FileText}
             error={errors.eventName?.message}
             {...register('eventName', { required: 'Event Name is required' })}
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="w-full flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#0F5132] tracking-wide font-heading">
-                Entry Fee (Fixed)
-              </label>
-              <input
-                type="text"
-                value="150"
-                readOnly
-                className="w-full bg-[#FFF9F0] border border-[#D4A017]/50 rounded-2xl px-4 py-3 text-sm font-black text-[#0F5132] font-heading cursor-not-allowed"
-              />
-            </div>
+            <Input
+              label="Entry Fee *"
+              type="number"
+              leftIcon={Coins}
+              error={errors.entryFee?.message}
+              {...register('entryFee', { required: 'Entry Fee is required' })}
+            />
 
             <Input
               label="Target Amount (Goal) *"

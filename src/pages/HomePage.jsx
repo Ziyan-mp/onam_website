@@ -5,12 +5,14 @@ import { Timeline } from '../components/Timeline';
 import { RegistrationForm } from '../components/RegistrationForm';
 import { PrizeCard } from '../components/PrizeCard';
 import { WinnerShowcase } from '../components/WinnerShowcase';
+import { useSettings } from '../context/SettingsContext';
 
 /**
  * HomePage Component
  */
 export const HomePage = () => {
   const location = useLocation();
+  const { settings } = useSettings();
 
   useEffect(() => {
     if (location.hash) {
@@ -50,17 +52,17 @@ export const HomePage = () => {
               EXCLUSIVE STAFF BUMPER REWARDS
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-[#0F5132] font-heading">
-              Thiruvonam Bumper Prizes
+              {settings?.eventName ? `${settings.eventName} Prizes` : 'Bumper Prizes'}
             </h2>
             <p className="text-slate-600 text-sm font-sans">
-              Participate for ₹150 and stand a chance to win exciting prizes this Thiruvonam!
+              Participate for ₹{settings?.entryFee || 150} and stand a chance to win exciting prizes!
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <PrizeCard
               rank={1}
-              title="Grand Thiruvonam Bumper"
+              title="Grand Bumper"
               subtitle="1st Bumper Winner"
               ribbonText="GRAND BUMPER"
               isFeatured

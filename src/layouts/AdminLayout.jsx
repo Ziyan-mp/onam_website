@@ -17,6 +17,8 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { cn } from '../utils/cn';
+import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Professional SaaS Admin Dashboard Layout
@@ -24,6 +26,8 @@ import { cn } from '../utils/cn';
 export const AdminLayout = () => {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout, user } = React.useContext(AuthContext);
 
   const navItems = [
     { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -46,15 +50,9 @@ export const AdminLayout = () => {
           <div>
             <div className="flex items-center gap-1.5">
               <span className="text-base font-black tracking-tight text-white uppercase font-heading">
-                ONAM ADMIN
-              </span>
-              <span className="px-1.5 py-0.5 rounded bg-[#D4A017] text-[#0F5132] text-[9px] font-black uppercase font-heading">
-                PRO
+                PONNONAM ADMIN
               </span>
             </div>
-            <span className="text-[10px] font-bold text-amber-200/70 tracking-widest uppercase block font-heading">
-              SECRETARIAT 2026
-            </span>
           </div>
         </Link>
 
@@ -94,18 +92,21 @@ export const AdminLayout = () => {
             AD
           </div>
           <div className="overflow-hidden text-xs">
-            <span className="font-extrabold text-white block truncate font-heading">Secretariat Admin</span>
+            <span className="font-extrabold text-white block truncate font-heading">{user?.username === 'admin' ? 'Secretariat Admin' : user?.username}</span>
             <span className="text-[10px] text-amber-200/70 block truncate font-sans">admin@college.edu.in</span>
           </div>
         </div>
 
-        <a
-          href="/admin/login"
+        <button
+          onClick={() => {
+            logout();
+            navigate('/admin/login');
+          }}
           className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl text-xs font-extrabold text-red-300 hover:bg-red-500/15 transition-colors font-heading border border-red-500/20"
         >
           <LogOut className="w-4 h-4" />
           <span>Sign Out</span>
-        </a>
+        </button>
       </div>
     </div>
   );
@@ -167,11 +168,7 @@ export const AdminLayout = () => {
 
           {/* Top Right Status & Notification Pills */}
           <div className="flex items-center gap-3">
-            {/* Status Pill */}
-            <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0F5132]/10 border border-[#0F5132]/20 text-[#0F5132] text-xs font-black font-heading">
-              <ShieldCheck className="w-4 h-4 text-[#D4A017]" />
-              <span>RNG Live Certified</span>
-            </div>
+
 
             {/* Notification Bell Badge */}
             <button className="p-2.5 rounded-2xl bg-[#FFF9F0] border border-amber-200 text-slate-700 hover:text-[#0F5132] relative shadow-xs">

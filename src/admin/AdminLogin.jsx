@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { User, Lock, Eye, EyeOff, ShieldCheck, Sparkles, LogIn, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { cn } from '../utils/cn';
+import { adminLogin } from '../services/adminApi';
+import { AuthContext } from '../context/AuthContext';
 
 /**
  * Elegant Centered Admin Login Page Component
  */
 export const AdminLogin = ({ className }) => {
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -26,20 +31,28 @@ export const AdminLogin = ({ className }) => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setIsSubmitting(true);
-    toast.loading('Authenticating Secretariat Admin credentials...', { id: 'admin-login' });
+    const toastId = toast.loading('Authenticating Secretariat Admin credentials...');
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      if (data.username === 'admin' && data.password === 'onam2026') {
-        toast.success('Admin Authentication Successful! Welcome to Dashboard.', { id: 'admin-login' });
-        window.location.href = '/admin';
+    try {
+      const response = await adminLogin({
+        username: data.username,
+        password: data.password
+      });
+
+      if (response.success) {
+        toast.success('Admin Authentication Successful! Welcome to Dashboard.', { id: toastId });
+        login(response.user, response.token);
+        navigate('/admin');
       } else {
-        toast.success('Demo Login Accepted! Redirecting to Secretariat Admin Panel...', { id: 'admin-login' });
-        window.location.href = '/admin';
+        toast.error(response.message || 'Authentication failed', { id: toastId });
       }
-    }, 1500);
+    } catch (error) {
+      toast.error(error.message || 'Invalid admin credentials', { id: toastId });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

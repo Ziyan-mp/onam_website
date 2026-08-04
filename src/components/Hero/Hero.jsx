@@ -4,11 +4,13 @@ import { Sparkles, Ticket, Trophy, ArrowRight, Star } from 'lucide-react';
 import { Button } from '../Button';
 import { Countdown } from '../Countdown';
 import { cn } from '../../utils/cn';
+import { useSettings } from '../../context/SettingsContext';
 
 /**
  * Premium Responsive Hero Section - Onam Lucky Draw 2026
  */
 export const Hero = ({ className }) => {
+  const { settings } = useSettings();
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -51,8 +53,7 @@ export const Hero = ({ className }) => {
             {/* Main Heading */}
             <motion.div variants={itemVariants} className="space-y-2">
               <h1 className="text-4xl sm:text-6xl lg:text-6xl font-black text-[#0F5132] tracking-tight leading-[1.08] font-heading">
-                ONAM LUCKY DRAW <br />
-                <span className="text-gold-gradient drop-shadow-xs">2026</span>
+                {settings?.eventName || 'Onam Lucky Draw'}
               </h1>
             </motion.div>
 
@@ -66,7 +67,7 @@ export const Hero = ({ className }) => {
                   Teachers & Staff Only
                 </span>
                 <span className="px-3.5 py-1 rounded-xl bg-[#0F5132] text-[#FFF9F0] text-xs font-bold uppercase tracking-wider shadow-sm font-heading">
-                  Participate for just ₹150
+                  Participate for just ₹{settings?.entryFee || 150}
                 </span>
               </div>
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed pt-2 font-sans max-w-xl">
@@ -78,7 +79,7 @@ export const Hero = ({ className }) => {
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
               <a href="#register">
                 <Button variant="primary" size="lg" leftIcon={Ticket} rightIcon={ArrowRight} className="w-full sm:w-auto shadow-md">
-                  Register & Pay ₹150
+                  Register & Pay ₹{settings?.entryFee || 150}
                 </Button>
               </a>
               <a href="#prizes">
@@ -123,12 +124,12 @@ export const Hero = ({ className }) => {
                       <Star className="w-5 h-5 fill-[#D4A017]" />
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-slate-800 block font-heading">Onam Lucky Draw 2026</span>
+                      <span className="text-xs font-bold text-slate-800 block font-heading line-clamp-1">{settings?.eventName || 'Onam Lucky Draw'}</span>
                       <span className="text-[10px] text-slate-500 font-semibold font-sans">Live Staff Draw</span>
                     </div>
                   </div>
-                  <span className="text-xs font-black text-[#0F5132] bg-[#0F5132]/10 px-2.5 py-1 rounded-lg border border-[#0F5132]/20 font-heading">
-                    ₹150 Entry
+                  <span className="text-xs font-black text-[#0F5132] bg-[#0F5132]/10 px-2.5 py-1 rounded-lg border border-[#0F5132]/20 font-heading whitespace-nowrap">
+                    ₹{settings?.entryFee || 150} Entry
                   </span>
                 </div>
               </div>

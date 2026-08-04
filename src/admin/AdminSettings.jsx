@@ -21,6 +21,8 @@ import toast from 'react-hot-toast';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { cn } from '../utils/cn';
+import { getSettings, updateSettings } from '../services/adminApi';
+import { useSettings } from '../context/SettingsContext';
 
 /**
  * Secretariat Admin Settings Component
@@ -28,24 +30,40 @@ import { cn } from '../utils/cn';
 export const AdminSettings = ({ className }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [logoPreview, setLogoPreview] = useState('/vite.svg');
-  const [showKeySecret, setShowKeySecret] = useState(false);
+  const { refreshSettings } = useSettings();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      collegeName: 'DEPARTMENT OF EC',
-      themePreset: 'kasavu-gold-emerald',
-      razorpayKeyId: 'rzp_live_98420ONAM2026',
-      razorpayKeySecret: 'w89420onamsecretkey2026',
-      razorpayMode: 'LIVE',
+      collegeName: 'PONNONAM Mega Staff Lucky Draw',
       adminName: 'Secretariat Admin Officer',
       adminEmail: 'admin@college.edu.in',
       adminPassword: '',
     },
   });
+
+  React.useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await getSettings();
+        if (response.success && response.settings) {
+          reset({
+            collegeName: response.settings.eventName || '',
+            adminName: 'Secretariat Admin Officer',
+            adminEmail: 'admin@college.edu.in',
+            adminPassword: '',
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch settings", error);
+      }
+    };
+    fetchSettings();
+  }, [reset]);
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -56,14 +74,23 @@ export const AdminSettings = ({ className }) => {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setIsSaving(true);
     toast.loading('Saving Secretariat Portal Settings...', { id: 'settings-toast' });
 
-    setTimeout(() => {
+    try {
+      const response = await updateSettings({
+        eventName: data.collegeName
+      });
+      if (response.success) {
+        toast.success('All Settings & Razorpay API Keys Saved Successfully!', { id: 'settings-toast' });
+        refreshSettings();
+      }
+    } catch (error) {
+      toast.error('Failed to save settings', { id: 'settings-toast' });
+    } finally {
       setIsSaving(false);
-      toast.success('All Settings & Razorpay API Keys Saved Successfully!', { id: 'settings-toast' });
-    }, 1200);
+    }
   };
 
   return (
@@ -71,9 +98,6 @@ export const AdminSettings = ({ className }) => {
       {/* Top Banner Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-amber-200/90 shadow-soft">
         <div>
-          <span className="text-xs font-black uppercase text-[#D4A017] tracking-widest block font-heading">
-            SECRETARIAT CONTROLLER
-          </span>
           <h1 className="text-2xl sm:text-3xl font-black text-[#0F5132] font-heading mt-1">
             System Settings
           </h1>
@@ -82,9 +106,7 @@ export const AdminSettings = ({ className }) => {
           </p>
         </div>
 
-        <span className="px-3.5 py-1.5 rounded-full bg-[#0F5132]/10 text-[#0F5132] text-xs font-extrabold uppercase font-heading border border-[#0F5132]/20 flex items-center gap-1.5">
-          <ShieldCheck className="w-4 h-4 text-[#D4A017]" /> 256-BIT ENCRYPTED
-        </span>
+
       </div>
 
       {/* Main Settings Form */}
@@ -138,118 +160,14 @@ export const AdminSettings = ({ className }) => {
           </div>
         </motion.div>
 
-        {/* 2. Theme Customization */}
+        {/* 2. Secretariat Admin Profile & Password */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white rounded-3xl p-6 sm:p-8 border border-amber-200/90 shadow-soft space-y-6">
-          <div className="flex items-center gap-3 border-b border-amber-100 pb-4">
-            <div className="p-2.5 rounded-xl bg-[#D4A017]/15 text-[#0F5132]">
-              <Palette className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-slate-800 font-heading">2. Festival Theme Aesthetic</h3>
-              <p className="text-xs text-slate-500 font-sans">Color tokens & Kasavu Gold preset configuration</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <label className="p-4 rounded-2xl border-2 border-[#D4A017] bg-[#FFF9F0] flex items-start gap-3 cursor-pointer">
-              <input type="radio" value="kasavu-gold-emerald" defaultChecked className="mt-1 text-[#0F5132]" {...register('themePreset')} />
-              <div>
-                <span className="text-xs font-bold text-slate-800 font-heading block">Kasavu Gold & Emerald</span>
-                <span className="text-[10px] text-slate-500 block mt-0.5">Primary #0F5132 • Secondary #D4A017</span>
-              </div>
-            </label>
-
-            <label className="p-4 rounded-2xl border border-amber-200 bg-white flex items-start gap-3 cursor-pointer hover:border-[#D4A017]">
-              <input type="radio" value="royal-maroon-gold" className="mt-1 text-[#8B1E3F]" {...register('themePreset')} />
-              <div>
-                <span className="text-xs font-bold text-slate-800 font-heading block">Royal Maroon & Gold</span>
-                <span className="text-[10px] text-slate-500 block mt-0.5">Primary #8B1E3F • Secondary #D4A017</span>
-              </div>
-            </label>
-
-            <label className="p-4 rounded-2xl border border-amber-200 bg-white flex items-start gap-3 cursor-pointer hover:border-[#D4A017]">
-              <input type="radio" value="midnight-luxury" className="mt-1 text-slate-900" {...register('themePreset')} />
-              <div>
-                <span className="text-xs font-bold text-slate-800 font-heading block">Midnight Velvet</span>
-                <span className="text-[10px] text-slate-500 block mt-0.5">Primary #0F172A • Secondary #F59E0B</span>
-              </div>
-            </label>
-          </div>
-        </motion.div>
-
-        {/* 3. Razorpay Payment Gateway Credentials */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white rounded-3xl p-6 sm:p-8 border border-amber-200/90 shadow-soft space-y-6">
-          <div className="flex items-center justify-between border-b border-amber-100 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-[#8B1E3F]/10 text-[#8B1E3F]">
-                <Key className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-lg font-black text-slate-800 font-heading">3. Razorpay API Gateway Credentials</h3>
-                <p className="text-xs text-slate-500 font-sans">Payment API keys for ₹150 ticket checkout</p>
-              </div>
-            </div>
-            <span className="px-3 py-1 rounded-full bg-[#0F5132]/10 text-[#0F5132] text-xs font-black uppercase tracking-wider font-heading border border-[#0F5132]/20">
-              RAZORPAY V1 API
-            </span>
-          </div>
-
-          <div className="space-y-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* Razorpay Key ID */}
-              <Input
-                label="Razorpay Key ID *"
-                placeholder="e.g. rzp_live_98420ONAM2026"
-                leftIcon={Key}
-                error={errors.razorpayKeyId?.message}
-                {...register('razorpayKeyId', { required: 'Razorpay Key ID is required' })}
-              />
-
-              {/* Razorpay Key Secret */}
-              <div className="relative">
-                <Input
-                  label="Razorpay Key Secret *"
-                  placeholder="••••••••••••••••"
-                  type={showKeySecret ? 'text' : 'password'}
-                  leftIcon={Key}
-                  error={errors.razorpayKeySecret?.message}
-                  {...register('razorpayKeySecret', { required: 'Razorpay Key Secret is required' })}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowKeySecret(!showKeySecret)}
-                  className="absolute right-3.5 top-[38px] text-slate-400 hover:text-[#0F5132] p-1"
-                >
-                  {showKeySecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Gateway Mode Selector */}
-            <div className="p-4 rounded-2xl bg-[#FFF9F0] border border-amber-200/80 flex items-center justify-between">
-              <div>
-                <span className="text-xs font-bold text-slate-800 font-heading block">Gateway Mode</span>
-                <span className="text-[11px] text-slate-500 font-sans">Switch between Live Merchant Production and Test Sandbox</span>
-              </div>
-              <select
-                {...register('razorpayMode')}
-                className="bg-white border border-amber-300 rounded-xl px-4 py-2 text-xs font-black text-[#0F5132] font-heading focus:outline-none"
-              >
-                <option value="LIVE">LIVE Production Mode</option>
-                <option value="TEST">TEST Sandbox Mode</option>
-              </select>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* 4. Secretariat Admin Profile & Password */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-white rounded-3xl p-6 sm:p-8 border border-amber-200/90 shadow-soft space-y-6">
           <div className="flex items-center gap-3 border-b border-amber-100 pb-4">
             <div className="p-2.5 rounded-xl bg-[#0F5132]/10 text-[#0F5132]">
               <User className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-slate-800 font-heading">4. Admin Profile & Credentials</h3>
+              <h3 className="text-lg font-black text-slate-800 font-heading">2. Admin Profile & Credentials</h3>
               <p className="text-xs text-slate-500 font-sans">Account profile & password update</p>
             </div>
           </div>
@@ -280,8 +198,7 @@ export const AdminSettings = ({ className }) => {
           </div>
         </motion.div>
 
-        {/* Large Save Settings CTA Button */}
-        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="pt-2">
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="pt-2">
           <Button
             type="submit"
             variant="primary"

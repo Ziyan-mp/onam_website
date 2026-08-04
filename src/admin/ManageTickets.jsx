@@ -20,82 +20,52 @@ import { Ticket as TicketModalView } from '../components/Ticket';
 import { Modal } from '../components/Modal';
 import { formatCurrency, formatDate, formatTicketId } from '../utils/formatters';
 import { cn } from '../utils/cn';
+import { getTickets } from '../services/adminApi';
+import { useDraw } from '../hooks/useDraw';
 
 /**
  * Razorpay Payment History & Participant Logs Page Component
  */
 export const ManageTickets = ({ className }) => {
+  const { lastDrawTime } = useDraw();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('ALL');
   const [activeModalTicket, setActiveModalTicket] = useState(null);
 
-  // Mock Payment Transactions Data
-  const initialPayments = [
-    {
-      paymentId: 'PAY-RZP-98421',
-      ticketNumber: '8942',
-      participantName: 'Prof. Ananthakrishnan Nair',
-      department: 'Computer Science & Eng.',
-      amount: 150,
-      date: '2026-07-27T18:30:00',
-      status: 'PAID',
-    },
-    {
-      paymentId: 'PAY-RZP-98420',
-      ticketNumber: '8941',
-      participantName: 'Dr. Sunitha Menon',
-      department: 'Electronics & Comm.',
-      amount: 150,
-      date: '2026-07-27T17:45:00',
-      status: 'PAID',
-    },
-    {
-      paymentId: 'PAY-RZP-98419',
-      ticketNumber: '8940',
-      participantName: 'Mr. Rajesh Varma',
-      department: 'Administration',
-      amount: 150,
-      date: '2026-07-27T16:20:00',
-      status: 'PAID',
-    },
-    {
-      paymentId: 'PAY-RZP-98418',
-      ticketNumber: '8939',
-      participantName: 'Prof. Meera Pillai',
-      department: 'Mathematics',
-      amount: 150,
-      date: '2026-07-27T15:10:00',
-      status: 'PAID',
-    },
-    {
-      paymentId: 'PAY-RZP-98417',
-      ticketNumber: '8938',
-      participantName: 'Dr. Vikram Shah',
-      department: 'Physics',
-      amount: 150,
-      date: '2026-07-27T14:05:00',
-      status: 'PAID',
-    },
-    {
-      paymentId: 'PAY-RZP-98416',
-      ticketNumber: '8937',
-      participantName: 'Prof. Lakshmi R.',
-      department: 'Chemistry',
-      amount: 150,
-      date: '2026-07-27T13:20:00',
-      status: 'PAID',
-    },
-  ];
+  const [tickets, setTickets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const response = await getTickets();
+        if (response.success) {
+          setTickets(response.tickets || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch tickets", error);
+        toast.error(error.message || "Failed to load tickets");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTickets();
+  }, [lastDrawTime]);
 
   // Real-Time Filter Logic
-  const filteredPayments = initialPayments.filter((item) => {
+  const filteredPayments = tickets.filter((item) => {
+    const paymentId = item.razorpayPaymentId || '';
+    const name = item.purchaserName || '';
+    const dept = item.department || '';
+    const status = item.paymentStatus ? item.paymentStatus.toUpperCase() : '';
+    
     const matchesSearch =
-      item.paymentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.participantName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      formatTicketId(item.ticketNumber).toLowerCase().includes(searchTerm.toLowerCase());
+      paymentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      dept.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      formatTicketId(item.ticketCode).toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = selectedStatus === 'ALL' || item.status === selectedStatus;
+    const matchesStatus = selectedStatus === 'ALL' || status === selectedStatus;
 
     return matchesSearch && matchesStatus;
   });
@@ -105,7 +75,7 @@ export const ManageTickets = ({ className }) => {
     const headers = ['Payment ID,Ticket Code,Participant Name,Department,Amount (INR),Payment Date,Status'];
     const rows = filteredPayments.map(
       (p) =>
-        `"${p.paymentId}","${formatTicketId(p.ticketNumber)}","${p.participantName}","${p.department}",${p.amount},"${formatDate(p.date)}","${p.status}"`
+        `"${p.razorpayPaymentId}","${formatTicketId(p.ticketCode)}","${p.purchaserName}","${p.department}",${p.ticketPrice},"${formatDate(p.purchasedAt)}","${p.paymentStatus.toUpperCase()}"`
     );
 
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
@@ -132,13 +102,13 @@ export const ManageTickets = ({ className }) => {
         {activeModalTicket && (
           <div className="pt-2">
             <TicketModalView
-              ticketNumber={activeModalTicket.ticketNumber}
-              participantName={activeModalTicket.participantName}
+              ticketNumber={activeModalTicket.ticketCode}
+              participantName={activeModalTicket.purchaserName}
               department={activeModalTicket.department}
-              paymentId={activeModalTicket.paymentId}
-              amount={activeModalTicket.amount}
-              drawDate={activeModalTicket.date}
-              status={activeModalTicket.status}
+              paymentId={activeModalTicket.razorpayPaymentId}
+              amount={activeModalTicket.ticketPrice}
+              drawDate={activeModalTicket.purchasedAt}
+              status={activeModalTicket.paymentStatus.toUpperCase()}
             />
           </div>
         )}
@@ -147,9 +117,6 @@ export const ManageTickets = ({ className }) => {
       {/* Top Controller Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-amber-200/90 shadow-soft">
         <div>
-          <span className="text-xs font-black uppercase text-[#D4A017] tracking-widest block font-heading">
-            SECRETARIAT LOGS
-          </span>
           <h1 className="text-2xl sm:text-3xl font-black text-[#0F5132] font-heading mt-1">
             Razorpay Payment History
           </h1>
@@ -205,7 +172,7 @@ export const ManageTickets = ({ className }) => {
         <div className="flex items-center justify-between text-xs text-slate-500 font-sans pt-1">
           <span>
             Showing <strong className="text-[#0F5132] font-heading">{filteredPayments.length}</strong> of{' '}
-            <strong className="text-slate-800 font-heading">{initialPayments.length}</strong> payment transactions
+            <strong className="text-slate-800 font-heading">{tickets.length}</strong> payment transactions
           </span>
           <span className="text-[#0F5132] font-bold font-heading flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5 text-[#D4A017]" /> 256-Bit SSL Encrypted Log
@@ -233,20 +200,26 @@ export const ManageTickets = ({ className }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-amber-100/60 font-medium text-slate-700">
-              {filteredPayments.length > 0 ? (
+              {isLoading ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-12 text-center text-[#0F5132] font-bold">
+                    Loading tickets...
+                  </td>
+                </tr>
+              ) : filteredPayments.length > 0 ? (
                 filteredPayments.map((row) => (
-                  <tr key={row.paymentId} className="hover:bg-[#FFF9F0]/60 transition-colors">
+                  <tr key={row._id || row.ticketCode} className="hover:bg-[#FFF9F0]/60 transition-colors">
                     {/* Payment ID */}
                     <td className="px-6 py-4 font-mono font-black text-[#0F5132]">
                       <div className="flex flex-col">
-                        <span>{row.paymentId}</span>
-                        <span className="text-[10px] text-slate-400 font-sans">{formatTicketId(row.ticketNumber)}</span>
+                        <span>{row.razorpayPaymentId}</span>
+                        <span className="text-[10px] text-slate-400 font-sans">{formatTicketId(row.ticketCode)}</span>
                       </div>
                     </td>
 
                     {/* Participant */}
                     <td className="px-6 py-4 font-bold text-slate-800">
-                      {row.participantName}
+                      {row.purchaserName}
                     </td>
 
                     {/* Department */}
@@ -254,16 +227,16 @@ export const ManageTickets = ({ className }) => {
 
                     {/* Amount */}
                     <td className="px-6 py-4 font-black text-[#0F5132] font-heading">
-                      {formatCurrency(row.amount)}
+                      {formatCurrency(row.ticketPrice)}
                     </td>
 
                     {/* Date */}
-                    <td className="px-6 py-4 text-slate-500">{formatDate(row.date)}</td>
+                    <td className="px-6 py-4 text-slate-500">{formatDate(row.purchasedAt)}</td>
 
                     {/* Status */}
                     <td className="px-6 py-4">
                       <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-800 font-black text-[10px] uppercase tracking-wider font-heading border border-emerald-500/20 flex items-center gap-1 w-fit">
-                        <CheckCircle2 className="w-3 h-3 text-[#0F5132]" /> {row.status}
+                        <CheckCircle2 className="w-3 h-3 text-[#0F5132]" /> {row.paymentStatus.toUpperCase()}
                       </span>
                     </td>
 
@@ -281,7 +254,7 @@ export const ManageTickets = ({ className }) => {
               ) : (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-slate-400 font-sans">
-                    No payment records found matching "{searchTerm}".
+                    {searchTerm ? `No payment records found matching "${searchTerm}".` : "No payment records found."}
                   </td>
                 </tr>
               )}

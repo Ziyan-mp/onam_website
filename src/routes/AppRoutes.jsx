@@ -5,6 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import { PageLoader } from '../components/Loader';
+import { AdminProtectedRoute } from '../components/AdminProtectedRoute';
 
 // Lazy Loaded Public Pages (Route Code Splitting)
 const HomePage = lazy(() => import('../pages/HomePage'));
@@ -44,12 +45,14 @@ export const AppRoutes = () => {
         <Route path="/admin/login" element={<AdminLogin />} />
 
         {/* Admin Panel Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="draws" element={<ManageDraws />} />
-          <Route path="tickets" element={<ManageTickets />} />
-          <Route path="reports" element={<AdminReports />} />
-          <Route path="settings" element={<AdminSettings />} />
+        <Route element={<AdminProtectedRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="draws" element={<ManageDraws />} />
+            <Route path="tickets" element={<ManageTickets />} />
+            <Route path="reports" element={<AdminReports />} />
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
         </Route>
 
         {/* 404 Catch All */}

@@ -2,11 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { UserPlus, CreditCard, Ticket, Clock, PlayCircle, Trophy, ArrowDown, Sparkles } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import { useSettings } from '../../context/SettingsContext';
 
 /**
  * Beautiful How It Works Timeline Component - 6 Step Process
  */
 export const Timeline = ({ className }) => {
+  const { settings } = useSettings();
   const steps = [
     {
       step: 1,
@@ -19,9 +21,9 @@ export const Timeline = ({ className }) => {
     },
     {
       step: 2,
-      title: 'Pay ₹150',
+      title: `Pay ₹${settings?.entryFee || 150}`,
       subtitle: 'Razorpay Gateway',
-      description: 'Complete the ₹150 entry fee payment via UPI (GPay/PhonePe), NetBanking, or Cards.',
+      description: `Complete the ₹${settings?.entryFee || 150} entry fee payment via UPI (GPay/PhonePe), NetBanking, or Cards.`,
       icon: CreditCard,
       color: 'bg-[#D4A017] text-[#0F5132] border-[#D4A017]',
       accentColor: 'text-[#D4A017]',
@@ -38,8 +40,8 @@ export const Timeline = ({ className }) => {
     {
       step: 4,
       title: 'Wait for Draw',
-      subtitle: 'Countdown to Onam',
-      description: 'Track the live countdown timer on the portal until Thiruvonam draw day.',
+      subtitle: 'Countdown to Draw',
+      description: 'Track the live countdown timer on the portal until the draw day.',
       icon: Clock,
       color: 'bg-[#8B1E3F] text-white border-[#8B1E3F]',
       accentColor: 'text-[#8B1E3F]',
@@ -101,7 +103,7 @@ export const Timeline = ({ className }) => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-slate-600 text-sm sm:text-base leading-relaxed font-sans"
           >
-            Participating in the Onam Lucky Draw 2026 is fast and simple. Follow our 6-step journey from registration to winner declaration!
+            Participating in the {settings?.eventName || 'Lucky Draw'} is fast and simple. Follow our 6-step journey from registration to winner declaration!
           </motion.p>
         </div>
 

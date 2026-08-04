@@ -17,6 +17,9 @@ import {
 import { Button } from '../components/Button';
 import { ProgressBar } from '../components/ProgressBar';
 import { formatCurrency, formatDate, formatTicketId } from '../utils/formatters';
+import { getDashboardStats } from '../services/adminApi';
+import { useSettings } from '../context/SettingsContext';
+import { useDraw } from '../hooks/useDraw';
 
 /**
  * Custom Animated Counter Component
@@ -38,17 +41,63 @@ const AnimatedCounter = ({ value, prefix = '', suffix = '' }) => {
  * Admin Dashboard Component with 4 Statistic Cards, Collection Progress & Recent Payments
  */
 export const AdminDashboard = () => {
-  const targetPool = 150000;
-  const currentCollection = 102600;
-  const remainingAmount = targetPool - currentCollection;
-  const progressPercentage = (currentCollection / targetPool) * 100;
+  const { settings } = useSettings();
+  const { lastDrawTime } = useDraw();
+  const [stats, setStats] = useState({
+    totalCollection: 0,
+    participantsCount: 0,
+    targetAmount: 150000,
+    targetDate: new Date().toISOString()
+  });
+  const [recentPayments, setRecentPayments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchStats = async () => {
+      try {
+        const response = await getDashboardStats();
+        if (response.success && isMounted) {
+          setStats(response.stats);
+          setRecentPayments(response.recentPayments || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats", error);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+    
+    // Initial fetch
+    fetchStats();
+    
+    // Set up polling interval (every 5 seconds) to automatically refresh the dashboard
+    const interval = setInterval(fetchStats, 5000);
+    
+    // Cleanup on unmount
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [lastDrawTime]);
+
+  // Only default to stats.targetAmount if settings targetAmount is truly undefined
+  const targetAmount = settings?.targetAmount !== undefined ? settings.targetAmount : stats.targetAmount;
+  const remainingAmount = Math.max(0, targetAmount - stats.totalCollection);
+  const progressPercentage = targetAmount > 0 ? (stats.totalCollection / targetAmount) * 100 : 0;
+  
+  // Calculate days remaining
+  const today = new Date();
+  const targetDate = new Date(stats.targetDate);
+  const diffTime = targetDate - today;
+  const daysRemaining = diffTime > 0 ? Math.ceil(diffTime / (1000 * 60 * 60 * 24)) : 0;
 
   const dashboardCards = [
     {
       id: 'total-collection',
       title: 'Total Collection',
-      value: formatCurrency(currentCollection),
-      subtitle: 'From 684 Paid Tickets',
+      value: formatCurrency(stats.totalCollection),
+      subtitle: `From ${stats.participantsCount} Paid Tickets`,
       icon: Coins,
       badge: '+18.4% THIS WEEK',
       color: {
@@ -60,7 +109,7 @@ export const AdminDashboard = () => {
     {
       id: 'participants',
       title: 'Participants',
-      value: '684 Staff',
+      value: `${stats.participantsCount} Staff`,
       subtitle: 'Verified Teachers & Staff',
       icon: Users,
       badge: 'LIVE COUNT',
@@ -75,7 +124,7 @@ export const AdminDashboard = () => {
       id: 'remaining-amount',
       title: 'Remaining Amount',
       value: formatCurrency(remainingAmount),
-      subtitle: `To Reach ${formatCurrency(targetPool)} Goal`,
+      subtitle: `To Reach ${formatCurrency(targetAmount)} Goal`,
       icon: Target,
       badge: 'GOAL TARGET',
       color: {
@@ -87,10 +136,10 @@ export const AdminDashboard = () => {
     {
       id: 'days-remaining',
       title: 'Days Remaining',
-      value: '32 Days',
-      subtitle: 'Until Thiruvonam Draw',
+      value: `${daysRemaining} Days`,
+      subtitle: `Until ${settings?.eventName || 'Draw'}`,
       icon: Calendar,
-      badge: '28 AUG 2026',
+      badge: formatDate(stats.targetDate),
       color: {
         bg: 'bg-[#0F5132]/10',
         text: 'text-[#0F5132]',
@@ -99,22 +148,15 @@ export const AdminDashboard = () => {
     },
   ];
 
-  const recentPayments = [
-    { id: '8942', name: 'Prof. Ananthakrishnan Nair', dept: 'Computer Science', date: '2026-07-27T18:30:00', amount: 150, txnId: 'TXN-RZP-98421' },
-    { id: '8941', name: 'Dr. Sunitha Menon', dept: 'Electronics & Comm.', date: '2026-07-27T17:45:00', amount: 150, txnId: 'TXN-RZP-98420' },
-    { id: '8940', name: 'Mr. Rajesh Varma', dept: 'Administration', date: '2026-07-27T16:20:00', amount: 150, txnId: 'TXN-RZP-98419' },
-    { id: '8939', name: 'Prof. Meera Pillai', dept: 'Mathematics', date: '2026-07-27T15:10:00', amount: 150, txnId: 'TXN-RZP-98418' },
-    { id: '8938', name: 'Dr. Vikram Shah', dept: 'Physics', date: '2026-07-27T14:05:00', amount: 150, txnId: 'TXN-RZP-98417' },
-  ];
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-64 text-[#0F5132] font-bold">Loading dashboard...</div>;
+  }
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       {/* Dashboard Top Controller Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-amber-200/90 shadow-soft">
         <div>
-          <span className="text-xs font-black uppercase text-[#D4A017] tracking-widest block font-heading">
-            SECRETARIAT CONTROLLER
-          </span>
           <h1 className="text-2xl sm:text-3xl font-black text-[#0F5132] font-heading mt-1">
             Dashboard Overview
           </h1>
@@ -200,11 +242,11 @@ export const AdminDashboard = () => {
           <div className="flex items-center gap-4 text-xs font-heading">
             <div className="text-right">
               <span className="text-slate-500 block font-semibold">Collected</span>
-              <span className="text-lg font-black text-[#0F5132]">{formatCurrency(currentCollection)}</span>
+              <span className="text-lg font-black text-[#0F5132]">{formatCurrency(stats.totalCollection)}</span>
             </div>
             <div className="text-right border-l border-amber-200/80 pl-4">
               <span className="text-slate-500 block font-semibold">Target Goal</span>
-              <span className="text-lg font-black text-slate-800">{formatCurrency(targetPool)}</span>
+              <span className="text-lg font-black text-slate-800">{formatCurrency(targetAmount)}</span>
             </div>
           </div>
         </div>
@@ -212,8 +254,8 @@ export const AdminDashboard = () => {
         {/* Progress Bar Component */}
         <ProgressBar
           progress={progressPercentage}
-          label="₹150 Staff Ticket Pool Collection Progress"
-          valueText={`${formatCurrency(currentCollection)} / ${formatCurrency(targetPool)} (${progressPercentage.toFixed(1)}%)`}
+          label={`₹${settings?.entryFee || 150} Staff Ticket Pool Collection Progress`}
+          valueText={`${formatCurrency(stats.totalCollection)} / ${formatCurrency(targetAmount)} (${progressPercentage.toFixed(1)}%)`}
           barClassName="bg-gradient-to-r from-[#0F5132] via-[#167448] to-[#D4A017]"
         />
       </motion.div>
@@ -249,23 +291,29 @@ export const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-amber-100/60 font-medium text-slate-700">
-              {recentPayments.map((row) => (
-                <tr key={row.id} className="hover:bg-[#FFF9F0]/60 transition-colors">
-                  <td className="px-6 py-4 font-black font-heading text-[#0F5132]">
-                    {formatTicketId(row.id)}
-                  </td>
-                  <td className="px-6 py-4 font-bold text-slate-800">{row.name}</td>
-                  <td className="px-6 py-4">{row.dept}</td>
-                  <td className="px-6 py-4 font-mono text-slate-500">{row.txnId}</td>
-                  <td className="px-6 py-4 text-slate-500">{formatDate(row.date)}</td>
-                  <td className="px-6 py-4 font-extrabold text-[#0F5132]">{formatCurrency(row.amount)}</td>
-                  <td className="px-6 py-4">
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-800 font-black text-[10px] uppercase tracking-wider font-heading border border-emerald-500/20 flex items-center gap-1 w-fit">
-                      <CheckCircle2 className="w-3 h-3 text-[#0F5132]" /> PAID
-                    </span>
-                  </td>
+              {recentPayments.length > 0 ? (
+                recentPayments.map((row) => (
+                  <tr key={row._id || row.ticketCode} className="hover:bg-[#FFF9F0]/60 transition-colors">
+                    <td className="px-6 py-4 font-black font-heading text-[#0F5132]">
+                      {formatTicketId(row.ticketCode)}
+                    </td>
+                    <td className="px-6 py-4 font-bold text-slate-800">{row.purchaserName}</td>
+                    <td className="px-6 py-4">{row.department}</td>
+                    <td className="px-6 py-4 font-mono text-slate-500">{row.razorpayPaymentId}</td>
+                    <td className="px-6 py-4 text-slate-500">{formatDate(row.purchasedAt)}</td>
+                    <td className="px-6 py-4 font-extrabold text-[#0F5132]">{formatCurrency(row.ticketPrice)}</td>
+                    <td className="px-6 py-4">
+                      <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-800 font-black text-[10px] uppercase tracking-wider font-heading border border-emerald-500/20 flex items-center gap-1 w-fit">
+                        <CheckCircle2 className="w-3 h-3 text-[#0F5132]" /> {row.paymentStatus.toUpperCase()}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="px-6 py-4 text-center text-slate-500">No recent payments found.</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
