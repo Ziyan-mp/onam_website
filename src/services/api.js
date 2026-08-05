@@ -5,7 +5,7 @@ import axios from 'axios';
  */
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'https://onam-backend-wkz2.onrender.com/api/admin',
-  timeout: 15000,
+  timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
