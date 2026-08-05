@@ -121,19 +121,6 @@ export const AdminDashboard = () => {
       },
     },
     {
-      id: 'remaining-amount',
-      title: 'Remaining Amount',
-      value: formatCurrency(remainingAmount),
-      subtitle: `To Reach ${formatCurrency(targetAmount)} Goal`,
-      icon: Target,
-      badge: 'GOAL TARGET',
-      color: {
-        bg: 'bg-[#8B1E3F]/10',
-        text: 'text-[#8B1E3F]',
-        border: 'border-[#8B1E3F]/25',
-      },
-    },
-    {
       id: 'days-remaining',
       title: 'Days Remaining',
       value: `${daysRemaining} Days`,
@@ -177,8 +164,8 @@ export const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* 4 Responsive Statistic Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Responsive Statistic Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {dashboardCards.map((card, idx) => {
           const IconComp = card.icon;
           return (
@@ -244,10 +231,6 @@ export const AdminDashboard = () => {
               <span className="text-slate-500 block font-semibold">Collected</span>
               <span className="text-lg font-black text-[#0F5132]">{formatCurrency(stats.totalCollection)}</span>
             </div>
-            <div className="text-right border-l border-amber-200/80 pl-4">
-              <span className="text-slate-500 block font-semibold">Target Goal</span>
-              <span className="text-lg font-black text-slate-800">{formatCurrency(targetAmount)}</span>
-            </div>
           </div>
         </div>
 
@@ -255,7 +238,7 @@ export const AdminDashboard = () => {
         <ProgressBar
           progress={progressPercentage}
           label={`₹${settings?.entryFee || 150} Staff Ticket Pool Collection Progress`}
-          valueText={`${formatCurrency(stats.totalCollection)} / ${formatCurrency(targetAmount)} (${progressPercentage.toFixed(1)}%)`}
+          valueText={`${formatCurrency(stats.totalCollection)} Collected`}
           barClassName="bg-gradient-to-r from-[#0F5132] via-[#167448] to-[#D4A017]"
         />
       </motion.div>

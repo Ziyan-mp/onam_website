@@ -201,20 +201,8 @@ export const ManageDraws = ({ className }) => {
           </div>
         </div>
 
-        {/* Grid of Required Display Metrics (Target Amount, Collected, Participants, Target Date) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* 1. Target Amount */}
-          <div className="p-5 rounded-2xl bg-[#FFF9F0] border border-amber-100 shadow-xs space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase text-slate-500 tracking-wider font-heading">
-                TARGET AMOUNT
-              </span>
-              <Target className="w-4 h-4 text-[#8B1E3F]" />
-            </div>
-            <p className="text-2xl font-black text-slate-800 font-heading">{formatCurrency(targetAmount)}</p>
-            <span className="text-[11px] text-slate-500 font-sans block">Required Collection Goal</span>
-          </div>
-
+        {/* Grid of Required Display Metrics (Collected, Participants, Target Date) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* 2. Collected */}
           <div className="p-5 rounded-2xl bg-[#FFF9F0] border border-amber-100 shadow-xs space-y-1">
             <div className="flex items-center justify-between">
@@ -256,8 +244,8 @@ export const ManageDraws = ({ className }) => {
         <div className="space-y-3 p-6 rounded-2xl bg-[#FFF9F0] border border-amber-200/80">
           <ProgressBar
             progress={progressPercentage}
-            label="Collection Target Goal Progress"
-            valueText={`${formatCurrency(collectedAmount)} / ${formatCurrency(targetAmount)} (${progressPercentage.toFixed(1)}%)`}
+            label="Collection Progress"
+            valueText={`${formatCurrency(collectedAmount)} Collected`}
           />
         </div>
 
@@ -282,7 +270,7 @@ export const ManageDraws = ({ className }) => {
               <div>
                 <strong className="font-heading font-bold block">Start Lucky Draw Button Locked:</strong>
                 <span>
-                  The draw button remains disabled until <strong>Target Amount ({formatCurrency(targetAmount)})</strong> is collected
+                  The draw button remains disabled until the collection goal is reached
                   OR <strong>Target Date ({formatDate(targetDateStr)})</strong> is reached. Use the "Testing Override" switch at the top right to test the spin wheel.
                 </span>
               </div>
