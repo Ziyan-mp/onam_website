@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api/payments";
+const API = "https://onam-backend-wkz2.onrender.com/api/payments";
 
 export const createOrder = async (amount) => {
     const response = await fetch(`${API}/create-order`, {

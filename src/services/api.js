@@ -4,7 +4,7 @@ import axios from 'axios';
  * Pre-configured Axios instance for Onam Lucky Draw API backend
  */
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://onam-backend-wkz2.onrender.com',
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ api.interceptors.response.use(
       status: error.response?.status,
       data: error.response?.data,
     };
-    
+
     // Auto-logout on 401 Unauthorized
     if (customError.status === 401) {
       localStorage.removeItem('onam_auth_token');
@@ -42,7 +42,7 @@ api.interceptors.response.use(
         window.location.href = '/admin/login';
       }
     }
-    
+
     return Promise.reject(customError);
   }
 );

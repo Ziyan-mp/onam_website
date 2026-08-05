@@ -22,7 +22,7 @@ import { useSettings } from '../../context/SettingsContext';
 import {
   createOrder,
   verifyPayment,
-} from '../../services/paymentService';
+} from '../../services/paymentservice';
 
 import { loadRazorpay } from '../../utils/loadRazorpay';
 

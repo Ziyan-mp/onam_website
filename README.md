@@ -32,7 +32,7 @@ Create a `.env` file.
 Example:
 
 ```env
-VITE_API_URL=http://localhost:5000
+VITE_API_URL=https://onam-backend-wkz2.onrender.com
 
 VITE_RAZORPAY_KEY_ID=your_test_key
 ```
@@ -46,7 +46,7 @@ npm run dev
 Application runs on
 
 ```
-http://localhost:5173
+https://onam-backend-wkz2.onrender.com
 ```
 
 ## Features
