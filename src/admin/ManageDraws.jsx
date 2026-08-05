@@ -108,7 +108,7 @@ export const ManageDraws = ({ className }) => {
     try {
       const response = await updateSettings({
         eventName: data.eventName,
-        targetAmount: Number(data.targetAmount),
+        targetAmount: status.targetAmount,
         entryFee: Number(data.entryFee)
       });
       if (response.success) {
@@ -143,151 +143,7 @@ export const ManageDraws = ({ className }) => {
           </p>
         </div>
 
-        {/* Admin Testing Override Switch */}
-        <div className="flex items-center gap-3 p-3 rounded-2xl bg-[#FFF9F0] border border-amber-200/90 shadow-xs">
-          <span className="text-xs font-bold text-slate-700 font-heading">Testing Override</span>
-          <button
-            type="button"
-            onClick={() => {
-              setAdminTestingOverride(!adminTestingOverride);
-              toast.success(
-                !adminTestingOverride
-                  ? 'Admin Override Enabled! Start Lucky Draw button unlocked for testing.'
-                  : 'Admin Override Disabled. Normal target lock restored.'
-              );
-            }}
-            className={cn(
-              'w-12 h-6 rounded-full transition-colors p-1 flex items-center',
-              adminTestingOverride ? 'bg-[#0F5132] justify-end' : 'bg-slate-300 justify-start'
-            )}
-          >
-            <motion.div layout className="w-4 h-4 rounded-full bg-white shadow-md" />
-          </button>
-        </div>
       </div>
-
-      {/* Lucky Draw Controller & 5 Required Display Elements */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-3xl p-6 sm:p-10 border-2 border-[#D4A017]/40 shadow-soft-lg space-y-8"
-      >
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-amber-100 pb-6">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-[#0F5132]/10 text-[#0F5132]">
-              <Trophy className="w-7 h-7" />
-            </div>
-            <div>
-              <span className="text-xs font-black uppercase text-[#D4A017] tracking-widest block font-heading">
-                AUTOMATED RNG CONTROLLER
-              </span>
-              <h2 className="text-2xl font-black text-slate-800 font-heading">
-                {settings?.eventName || 'Lucky Draw'}
-              </h2>
-            </div>
-          </div>
-
-          {/* Conditional Lock Status Pill */}
-          <div className="flex items-center gap-2">
-            {canStartDraw ? (
-              <span className="px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-800 text-xs font-black uppercase tracking-wider font-heading border border-emerald-500/30 flex items-center gap-1.5">
-                <Unlock className="w-4 h-4 text-[#0F5132]" /> UNLOCKED & READY
-              </span>
-            ) : (
-              <span className="px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-800 text-xs font-black uppercase tracking-wider font-heading border border-amber-500/30 flex items-center gap-1.5">
-                <Lock className="w-4 h-4 text-[#D4A017]" /> LOCKED UNTIL TARGET REACHED
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Grid of Required Display Metrics (Collected, Participants, Target Date) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* 2. Collected */}
-          <div className="p-5 rounded-2xl bg-[#FFF9F0] border border-amber-100 shadow-xs space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase text-slate-500 tracking-wider font-heading">
-                COLLECTED
-              </span>
-              <Coins className="w-4 h-4 text-[#0F5132]" />
-            </div>
-            <p className="text-2xl font-black text-[#0F5132] font-heading">{formatCurrency(collectedAmount)}</p>
-            <span className="text-[11px] text-slate-500 font-sans block">From {participantCount} Paid Tickets</span>
-          </div>
-
-          {/* 3. Participants */}
-          <div className="p-5 rounded-2xl bg-[#FFF9F0] border border-amber-100 shadow-xs space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase text-slate-500 tracking-wider font-heading">
-                PARTICIPANTS
-              </span>
-              <Users className="w-4 h-4 text-[#D4A017]" />
-            </div>
-            <p className="text-2xl font-black text-slate-800 font-heading">{participantCount} Staff</p>
-            <span className="text-[11px] text-slate-500 font-sans block">Verified Teachers & Staff</span>
-          </div>
-
-          {/* 4. Target Date */}
-          <div className="p-5 rounded-2xl bg-[#FFF9F0] border border-amber-100 shadow-xs space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase text-slate-500 tracking-wider font-heading">
-                TARGET DATE
-              </span>
-              <Calendar className="w-4 h-4 text-[#0F5132]" />
-            </div>
-            <p className="text-base font-black text-slate-800 font-heading mt-1">{formatDate(targetDateStr)}</p>
-            <span className="text-[11px] text-slate-500 font-sans block">Scheduled PONNONAM Draw</span>
-          </div>
-        </div>
-
-        {/* 5. Progress Bar Component */}
-        <div className="space-y-3 p-6 rounded-2xl bg-[#FFF9F0] border border-amber-200/80">
-          <ProgressBar
-            progress={progressPercentage}
-            label="Collection Progress"
-            valueText={`${formatCurrency(collectedAmount)} Collected`}
-          />
-        </div>
-
-        {/* Start Lucky Draw Button & Conditional Lock Explanation */}
-        <div className="space-y-4 pt-2">
-          {/* Main Action Button */}
-          <Button
-            variant="primary"
-            size="lg"
-            isDisabled={!canStartDraw || isWinnerModalOpen}
-            leftIcon={Play}
-            onClick={() => setIsWinnerModalOpen(true)}
-            className="w-full py-5 text-lg font-black tracking-wide shadow-lg shadow-[#0F5132]/25 font-heading"
-          >
-            Start Lucky Draw
-          </Button>
-
-          {/* Disabled Condition Explanation Note */}
-          {!canStartDraw && (
-            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-900 font-sans flex items-start gap-3">
-              <Lock className="w-4 h-4 text-[#D4A017] shrink-0 mt-0.5" />
-              <div>
-                <strong className="font-heading font-bold block">Start Lucky Draw Button Locked:</strong>
-                <span>
-                  The draw button remains disabled until the collection goal is reached
-                  OR <strong>Target Date ({formatDate(targetDateStr)})</strong> is reached. Use the "Testing Override" switch at the top right to test the spin wheel.
-                </span>
-              </div>
-            </div>
-          )}
-
-          {canStartDraw && adminTestingOverride && (
-            <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-900 font-sans flex items-start gap-3">
-              <Unlock className="w-4 h-4 text-[#0F5132] shrink-0 mt-0.5" />
-              <div>
-                <strong className="font-heading font-bold block">Admin Override Active:</strong>
-                <span>Button is temporarily unlocked for admin testing mode. Click to test the spin wheel.</span>
-              </div>
-            </div>
-          )}
-        </div>
-      </motion.div>
 
       {/* Section 2: Event Configuration Form */}
       <motion.div
@@ -315,23 +171,13 @@ export const ManageDraws = ({ className }) => {
             {...register('eventName', { required: 'Event Name is required' })}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <Input
-              label="Entry Fee *"
-              type="number"
-              leftIcon={Coins}
-              error={errors.entryFee?.message}
-              {...register('entryFee', { required: 'Entry Fee is required' })}
-            />
-
-            <Input
-              label="Target Amount (Goal) *"
-              type="number"
-              leftIcon={Target}
-              error={errors.targetAmount?.message}
-              {...register('targetAmount', { required: 'Target Amount is required' })}
-            />
-          </div>
+          <Input
+            label="Entry Fee *"
+            type="number"
+            leftIcon={Coins}
+            error={errors.entryFee?.message}
+            {...register('entryFee', { required: 'Entry Fee is required' })}
+          />
 
           <div className="pt-2">
             <Button type="submit" variant="outline" size="md" isLoading={isSaving} leftIcon={Save}>

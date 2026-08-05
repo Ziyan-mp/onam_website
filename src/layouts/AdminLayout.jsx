@@ -166,16 +166,7 @@ export const AdminLayout = () => {
             </div>
           </div>
 
-          {/* Top Right Status & Notification Pills */}
-          <div className="flex items-center gap-3">
 
-
-            {/* Notification Bell Badge */}
-            <button className="p-2.5 rounded-2xl bg-[#FFF9F0] border border-amber-200 text-slate-700 hover:text-[#0F5132] relative shadow-xs">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#8B1E3F] rounded-full border-2 border-white" />
-            </button>
-          </div>
         </header>
 
         {/* Light Content Area Slot */}

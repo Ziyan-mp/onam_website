@@ -118,7 +118,7 @@ export const ManageTickets = ({ className }) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-amber-200/90 shadow-soft">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-[#0F5132] font-heading mt-1">
-            Razorpay Payment History
+            Payment History
           </h1>
           <p className="text-xs text-slate-500 font-sans">
             Search, filter, and export staff ticket transactions & Razorpay payment logs.
