@@ -4,7 +4,7 @@ import axios from 'axios';
  * Pre-configured Axios instance for Onam Lucky Draw API backend
  */
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://onam-backend-wkz2.onrender.com',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://onam-backend-wkz2.onrender.com/api/admin',
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
