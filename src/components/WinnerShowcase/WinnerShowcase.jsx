@@ -14,9 +14,9 @@ export const WinnerShowcase = ({ className }) => {
       prize: 'Smart Watch',
       prizeEmoji: '⌚',
       ribbonText: '1ST BUMPER',
-      winnerName: 'Prof. Ananthakrishnan Nair',
-      department: 'Computer Science & Engineering',
-      ticketNumber: '8942',
+      winnerName: 'To Be Announced',
+      department: 'Waiting for the live draw...',
+      ticketNumber: 'TBA',
       color: {
         card: 'border-2 border-[#D4A017] shadow-[0_0_40px_rgba(212,160,23,0.2)]',
         ribbon: 'bg-gradient-to-r from-[#D4A017] to-[#E5B83B] text-[#0F5132]',
@@ -30,9 +30,9 @@ export const WinnerShowcase = ({ className }) => {
       prize: 'Bluetooth Speaker',
       prizeEmoji: '🔊',
       ribbonText: '2ND PRIZE',
-      winnerName: 'Dr. Sunitha Menon',
-      department: 'Electronics & Communication',
-      ticketNumber: '7610',
+      winnerName: 'To Be Announced',
+      department: 'Waiting for the live draw...',
+      ticketNumber: 'TBA',
       color: {
         card: 'border border-slate-200',
         ribbon: 'bg-gradient-to-r from-slate-700 to-slate-900 text-white',
@@ -46,9 +46,9 @@ export const WinnerShowcase = ({ className }) => {
       prize: 'Onakkodi',
       prizeEmoji: '👘',
       ribbonText: '3RD PRIZE',
-      winnerName: 'Mr. Rajesh Varma',
-      department: 'Administration',
-      ticketNumber: '5234',
+      winnerName: 'To Be Announced',
+      department: 'Waiting for the live draw...',
+      ticketNumber: 'TBA',
       color: {
         card: 'border border-[#8B1E3F]/30',
         ribbon: 'bg-gradient-to-r from-[#8B1E3F] to-[#A61E3F] text-white',
@@ -108,13 +108,13 @@ export const WinnerShowcase = ({ className }) => {
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0F5132]/10 border border-[#0F5132]/25 text-[#0F5132] text-xs font-extrabold uppercase tracking-widest font-heading shadow-xs">
             <Sparkles className="w-4 h-4 text-[#D4A017] animate-spin" />
-            <span>OFFICIAL WINNER ANNOUNCEMENT</span>
+            <span>TO BE ANNOUNCED</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-[#0F5132] tracking-tight font-heading">
             Ponnonam Grand Winners
           </h2>
           <p className="text-slate-500 text-sm font-sans">
-            Congratulations to the lucky winners of Ponnonam 2026 Bumper Draw!
+            The lucky draw has not happened yet. Winners will be announced here on the draw date!
           </p>
         </div>
 
