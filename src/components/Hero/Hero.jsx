@@ -70,9 +70,6 @@ export const Hero = ({ className }) => {
                   Participate for just ₹{settings?.entryFee || 150}
                 </span>
               </div>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed pt-2 font-sans max-w-xl">
-                Join the official College Onam celebration! Win exciting prizes and live digital lucky draw.
-              </p>
             </motion.div>
 
             {/* CTA Buttons */}

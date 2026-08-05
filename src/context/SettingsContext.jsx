@@ -5,7 +5,7 @@ const SettingsContext = createContext(null);
 
 export const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState({
-    eventName: 'Thiruvonam Mega Staff Lucky Draw',
+    eventName: 'Ponnonam Lucky Draw',
     targetAmount: 150000,
     entryFee: 150,
     targetDate: new Date('2026-08-28T17:00:00+05:30').toISOString(),
@@ -18,7 +18,7 @@ export const SettingsProvider = ({ children }) => {
       const response = await api.get('/public/settings');
       if (response.success && response.settings) {
         setSettings({
-          eventName: response.settings.eventName || 'Thiruvonam Mega Staff Lucky Draw',
+          eventName: response.settings.eventName || 'Ponnonam Lucky Draw',
           targetAmount: response.settings.targetAmount !== undefined ? response.settings.targetAmount : 150000,
           entryFee: response.settings.entryFee !== undefined ? response.settings.entryFee : 150,
           targetDate: response.settings.targetDate || new Date('2026-08-28T17:00:00+05:30').toISOString(),

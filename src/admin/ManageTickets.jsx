@@ -174,9 +174,6 @@ export const ManageTickets = ({ className }) => {
             Showing <strong className="text-[#0F5132] font-heading">{filteredPayments.length}</strong> of{' '}
             <strong className="text-slate-800 font-heading">{tickets.length}</strong> payment transactions
           </span>
-          <span className="text-[#0F5132] font-bold font-heading flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#D4A017]" /> 256-Bit SSL Encrypted Log
-          </span>
         </div>
       </div>
 
