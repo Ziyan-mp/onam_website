@@ -31,7 +31,6 @@ export const AdminLayout = () => {
 
   const navItems = [
     { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { label: 'Manage Draws', href: '/admin/draws', icon: Trophy },
     { label: 'Tickets & Staff', href: '/admin/tickets', icon: Ticket },
     { label: 'Reports & Analytics', href: '/admin/reports', icon: FileText },
     { label: 'Settings', href: '/admin/settings', icon: Settings },

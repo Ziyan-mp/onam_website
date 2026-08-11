@@ -42,7 +42,7 @@ export const HomePage = () => {
         {/* 6-Step How It Works Timeline Flow */}
         <Timeline />
 
-        {/* Professional Registration & Razorpay Checkout Section */}
+        {/* Professional Registration & Checkout Section */}
         <RegistrationForm />
 
         {/* Featured Premium Prizes Section */}

@@ -83,7 +83,7 @@ export const AdminSettings = ({ className }) => {
         eventName: data.collegeName
       });
       if (response.success) {
-        toast.success('All Settings & Razorpay API Keys Saved Successfully!', { id: 'settings-toast' });
+        toast.success('All Settings Saved Successfully!', { id: 'settings-toast' });
         refreshSettings();
       }
     } catch (error) {
@@ -102,7 +102,7 @@ export const AdminSettings = ({ className }) => {
             System Settings
           </h1>
           <p className="text-xs text-slate-500 font-sans">
-            Manage college branding, theme palette, Razorpay API credentials, and admin profile.
+            Manage college branding, theme palette, and admin profile.
           </p>
         </div>
 
@@ -111,63 +111,16 @@ export const AdminSettings = ({ className }) => {
 
       {/* Main Settings Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        {/* 1. College Institution Branding & Logo */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-3xl p-6 sm:p-8 border border-amber-200/90 shadow-soft space-y-6">
-          <div className="flex items-center gap-3 border-b border-amber-100 pb-4">
-            <div className="p-2.5 rounded-xl bg-[#0F5132]/10 text-[#0F5132]">
-              <Building2 className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-slate-800 font-heading">1. Institution Branding & Logo</h3>
-              <p className="text-xs text-slate-500 font-sans">College name & official crest logo badge</p>
-            </div>
-          </div>
 
-          <div className="space-y-5">
-            {/* College Name */}
-            <Input
-              label="College Institution Name *"
-              placeholder="e.g. DEPARTMENT OF EC"
-              leftIcon={Building2}
-              error={errors.collegeName?.message}
-              {...register('collegeName', { required: 'College Name is required' })}
-            />
 
-            {/* Logo Upload Box */}
-            <div className="w-full flex flex-col gap-2">
-              <label className="text-xs font-bold text-[#0F5132] tracking-wide font-heading">
-                College Crest Logo Badge
-              </label>
-
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center p-4 rounded-2xl bg-[#FFF9F0] border-2 border-dashed border-[#D4A017]/50">
-                <div className="md:col-span-3 w-20 h-20 rounded-2xl overflow-hidden border-2 border-[#D4A017]/40 bg-white p-2 flex items-center justify-center shadow-xs mx-auto md:mx-0">
-                  <img src={logoPreview} alt="College Logo Preview" className="w-full h-full object-contain" />
-                </div>
-
-                <div className="md:col-span-9 space-y-2 text-center md:text-left">
-                  <label className="cursor-pointer inline-block">
-                    <input type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0F5132] text-white text-xs font-bold font-heading hover:bg-[#167448] transition-colors shadow-xs">
-                      <Upload className="w-4 h-4" /> Upload New Logo
-                    </span>
-                  </label>
-                  <p className="text-[11px] text-slate-500 font-sans">
-                    Recommended dimensions: 200x200px PNG or SVG with transparent background.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* 2. Secretariat Admin Profile & Password */}
+        {/* 1. Secretariat Admin Profile & Password */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white rounded-3xl p-6 sm:p-8 border border-amber-200/90 shadow-soft space-y-6">
           <div className="flex items-center gap-3 border-b border-amber-100 pb-4">
             <div className="p-2.5 rounded-xl bg-[#0F5132]/10 text-[#0F5132]">
               <User className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-slate-800 font-heading">2. Admin Profile & Credentials</h3>
+              <h3 className="text-lg font-black text-slate-800 font-heading">1. Admin Profile & Credentials</h3>
               <p className="text-xs text-slate-500 font-sans">Account profile & password update</p>
             </div>
           </div>

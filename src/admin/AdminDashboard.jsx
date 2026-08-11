@@ -267,7 +267,6 @@ export const AdminDashboard = () => {
                 <th className="px-6 py-4">Ticket Code</th>
                 <th className="px-6 py-4">Participant Name</th>
                 <th className="px-6 py-4">Department</th>
-                <th className="px-6 py-4">Transaction ID</th>
                 <th className="px-6 py-4">Payment Time</th>
                 <th className="px-6 py-4">Amount</th>
                 <th className="px-6 py-4">Status</th>
@@ -282,7 +281,6 @@ export const AdminDashboard = () => {
                     </td>
                     <td className="px-6 py-4 font-bold text-slate-800">{row.purchaserName}</td>
                     <td className="px-6 py-4">{row.department}</td>
-                    <td className="px-6 py-4 font-mono text-slate-500">{row.razorpayPaymentId}</td>
                     <td className="px-6 py-4 text-slate-500">{formatDate(row.purchasedAt)}</td>
                     <td className="px-6 py-4 font-extrabold text-[#0F5132]">{formatCurrency(row.ticketPrice)}</td>
                     <td className="px-6 py-4">
@@ -294,7 +292,7 @@ export const AdminDashboard = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="px-6 py-4 text-center text-slate-500">No recent payments found.</td>
+                  <td colSpan="6" className="px-6 py-4 text-center text-slate-500">No recent payments found.</td>
                 </tr>
               )}
             </tbody>

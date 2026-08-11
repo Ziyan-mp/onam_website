@@ -75,7 +75,7 @@ export const PaymentSuccess = ({
           <div className="flex items-center justify-between border-b border-amber-100 pb-4">
             <span className="text-xs font-bold uppercase text-slate-500 font-heading">Payment Details</span>
             <span className="px-3 py-1 rounded-full bg-[#0F5132]/10 text-[#0F5132] text-xs font-black uppercase tracking-wider font-heading border border-[#0F5132]/20">
-              PAID VIA RAZORPAY
+              PAID ONLINE
             </span>
           </div>
 
@@ -126,31 +126,11 @@ export const PaymentSuccess = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
+          className="flex flex-col items-center justify-center pt-2"
         >
-          <Button
-            variant="primary"
-            size="lg"
-            leftIcon={Download}
-            onClick={onDownload || (() => window.print())}
-            className="w-full sm:w-auto shadow-md"
-          >
-            Download Ticket
-          </Button>
-
-          <Button
-            variant="secondary"
-            size="lg"
-            leftIcon={Eye}
-            onClick={onViewTicket || (() => alert(`Viewing ticket code: ${formatTicketId(ticketNumber)}`))}
-            className="w-full sm:w-auto shadow-md"
-          >
-            View Ticket
-          </Button>
-
-          <a href="/" className="w-full sm:w-auto">
-            <Button variant="outline" size="lg" leftIcon={Home} className="w-full sm:w-auto">
-              Home
+          <a href="/" className="w-full sm:w-auto mt-4">
+            <Button variant="outline" size="lg" leftIcon={Home} className="w-full sm:w-auto shadow-sm">
+              Return to Home
             </Button>
           </a>
         </motion.div>

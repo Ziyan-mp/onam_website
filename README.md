@@ -7,8 +7,7 @@ Frontend for the Onam Lucky Draw registration system.
 - React
 - Vite
 - Tailwind CSS
-- Framer Motion
-- Razorpay Checkout
+- Responsive Design
 
 ## Installation
 
@@ -32,9 +31,8 @@ Create a `.env` file.
 Example:
 
 ```env
-VITE_API_URL=https://onam-backend-wkz2.onrender.com
-
-VITE_RAZORPAY_KEY_ID=your_test_key
+VITE_API_URL=http://localhost:5000/api
+VITE_GOOGLE_PAY_URL=https://pay.google.com/... (replace with confidential URL)
 ```
 
 ## Run
@@ -51,8 +49,6 @@ https://onam-backend-wkz2.onrender.com
 
 ## Features
 
-- User Registration
-- Razorpay Payment
 - Ticket Generation
 - Responsive UI
 - Ticket Printing

@@ -1,33 +1,33 @@
 import api from './api';
 
 export const adminLogin = async (credentials) => {
-    return await api.post('/login', credentials);
+    return await api.post('/admin/login', credentials);
 };
 
 export const getDashboardStats = async () => {
-    return await api.get('/dashboard-stats');
+    return await api.get('/admin/dashboard-stats');
 };
 
 export const getTickets = async () => {
-    return await api.get('/tickets');
+    return await api.get('/admin/tickets');
 };
 
 export const getReports = async () => {
-    return await api.get('/reports');
+    return await api.get('/admin/reports');
 };
 
 export const getSettings = async () => {
-    return await api.get('/settings');
+    return await api.get('/admin/settings');
 };
 
 export const updateSettings = async (data) => {
-    return await api.put('/settings', data);
+    return await api.put('/admin/settings', data);
 };
 
 export const getDrawStatus = async () => {
-    return await api.get('/draw/status');
+    return await api.get('/admin/draw/status');
 };
 
 export const executeDraw = async () => {
-    return await api.post('/draw/execute');
+    return await api.post('/admin/draw/execute');
 };

@@ -14,7 +14,7 @@ export const Timeline = ({ className }) => {
       step: 1,
       title: 'Register',
       subtitle: 'Fill Staff Details',
-      description: 'Enter your name, department, phone number, and college staff ID to start registration.',
+      description: 'Enter your name, department, phone number, and email to start registration.',
       icon: UserPlus,
       color: 'bg-[#0F5132] text-white border-[#0F5132]',
       accentColor: 'text-[#0F5132]',
@@ -22,8 +22,8 @@ export const Timeline = ({ className }) => {
     {
       step: 2,
       title: `Pay ₹${settings?.entryFee || 150}`,
-      subtitle: 'Razorpay Gateway',
-      description: `Complete the ₹${settings?.entryFee || 150} entry fee payment via UPI (GPay/PhonePe), NetBanking, or Cards.`,
+      subtitle: 'UPI Payment',
+      description: `Complete the ₹${settings?.entryFee || 150} entry fee payment via UPI.`,
       icon: CreditCard,
       color: 'bg-[#D4A017] text-[#0F5132] border-[#D4A017]',
       accentColor: 'text-[#D4A017]',
@@ -31,35 +31,17 @@ export const Timeline = ({ className }) => {
     {
       step: 3,
       title: 'Receive Ticket',
-      subtitle: 'Instant SMS & Email',
-      description: 'Get your digital ticket code and verified QR code stub delivered instantly to your device.',
+      subtitle: 'Download Ticket',
+      description: 'Get your digital ticket and download it.',
       icon: Ticket,
       color: 'bg-[#0F5132] text-white border-[#0F5132]',
       accentColor: 'text-[#0F5132]',
     },
     {
       step: 4,
-      title: 'Wait for Draw',
-      subtitle: 'Countdown to Draw',
-      description: 'Track the live countdown timer on the portal until the draw day.',
-      icon: Clock,
-      color: 'bg-[#8B1E3F] text-white border-[#8B1E3F]',
-      accentColor: 'text-[#8B1E3F]',
-    },
-    {
-      step: 5,
-      title: 'Admin Starts Draw',
-      subtitle: 'Live Automated RNG',
-      description: 'The Secretariat Admin initiates the live randomized draw engine in front of participants.',
-      icon: PlayCircle,
-      color: 'bg-[#0F5132] text-white border-[#0F5132]',
-      accentColor: 'text-[#0F5132]',
-    },
-    {
-      step: 6,
       title: 'Winner Announcement',
       subtitle: 'Prizes & Rewards',
-      description: 'Instant winner notification & prize handover ceremony for bumper rewards.',
+      description: 'Winner will be announced soon.',
       icon: Trophy,
       color: 'bg-[#D4A017] text-[#0F5132] border-[#D4A017]',
       accentColor: 'text-[#D4A017]',
@@ -103,7 +85,7 @@ export const Timeline = ({ className }) => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-slate-600 text-sm sm:text-base leading-relaxed font-sans"
           >
-            Participating in the {settings?.eventName || 'Lucky Draw'} is fast and simple. Follow our 6-step journey from registration to winner declaration!
+            Participating in the {settings?.eventName || 'Lucky Draw'} is fast and simple. Follow our 4-step journey from registration to winner declaration!
           </motion.p>
         </div>
 

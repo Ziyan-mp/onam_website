@@ -8,6 +8,7 @@ import {
   Mail,
   CreditCard,
   Sparkles,
+  Hash,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -18,13 +19,9 @@ import { Ticket as TicketCard } from '../Ticket';
 import { Modal } from '../Modal';
 import { cn } from '../../utils/cn';
 import { useSettings } from '../../context/SettingsContext';
+import { submitRegistration } from '../../services/registrationService';
 
-import {
-  createOrder,
-  verifyPayment,
-} from '../../services/paymentservice';
 
-import { loadRazorpay } from '../../utils/loadRazorpay';
 
 /**
  * Professional Registration & Checkout Form Component
@@ -33,6 +30,7 @@ export const RegistrationForm = ({ className }) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [issuedTicket, setIssuedTicket] = useState(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [hasRedirected, setHasRedirected] = useState(false);
 
   const { settings } = useSettings();
 
@@ -47,6 +45,7 @@ export const RegistrationForm = ({ className }) => {
       department: '',
       phone: '',
       email: '',
+      transactionId: '',
       amount: settings?.entryFee || 150,
     },
   });
@@ -55,163 +54,51 @@ export const RegistrationForm = ({ className }) => {
    * Handle registration form submission
    */
   const onSubmit = async (data) => {
+    if (!hasRedirected) {
+      const gpayUrl = import.meta.env.VITE_GOOGLE_PAY_URL;
+      
+      if (!gpayUrl || gpayUrl.trim() === '') {
+        toast.error('Payment configuration is missing. Payment is temporarily unavailable.');
+        return;
+      }
+
+      // Using location.href is the safest way to trigger mobile deep links (like upi://)
+      // without opening dead ghost tabs in the user's mobile browser.
+      window.location.href = gpayUrl;
+      setHasRedirected(true);
+      toast.success('Redirecting to Google Pay. Please complete the payment and return to enter your Transaction ID.', { duration: 6000 });
+      return;
+    }
+
+    if (!data.transactionId || data.transactionId.trim() === '') {
+      toast.error('Please enter the Transaction ID from Google Pay.');
+      return;
+    }
+
     try {
-      // --------------------------------------------------
-      // STEP 1: Load Razorpay Checkout
-      // --------------------------------------------------
-
-      const loaded = await loadRazorpay();
-
-      if (!loaded) {
-        toast.error('Failed to load Razorpay.');
-        return;
-      }
-
-      // --------------------------------------------------
-      // STEP 2: Create Razorpay Order on Backend
-      // --------------------------------------------------
-
-      const response = await createOrder(settings?.entryFee || 150);
-
-      if (!response.success) {
-        toast.error(
-          response.message || 'Unable to create payment order.'
-        );
-        return;
-      }
-
-      const order = response.order;
-
-      // --------------------------------------------------
-      // STEP 3: Configure Razorpay Checkout
-      // --------------------------------------------------
-
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-
-        amount: order.amount,
-        currency: order.currency,
-
-        name: settings?.eventName || 'Onam Lucky Draw',
-        description: 'Lucky Draw Registration',
-
-        order_id: order.id,
-
-        prefill: {
-          name: data.fullName,
-          email: data.email,
-          contact: data.phone,
-        },
-
-        theme: {
-          color: '#0F5132',
-        },
-
-        // ------------------------------------------------
-        // STEP 4: Razorpay Payment Success Handler
-        // ------------------------------------------------
-
-        handler: async function (paymentResponse) {
-          try {
-            console.log(
-              'Razorpay payment response:',
-              paymentResponse
-            );
-
-            // --------------------------------------------
-            // STEP 5: Send Payment Details to Backend
-            // --------------------------------------------
-
-            const verificationPayload = {
-              ...paymentResponse,
-
-              name: data.fullName,
-              email: data.email,
-              phone: data.phone,
-              department: data.department,
-            };
-
-            const verificationResult = await verifyPayment(
-              verificationPayload
-            );
-            console.log(
-              'Payment verification result:',
-              verificationResult
-            );
-
-            // --------------------------------------------
-            // STEP 6: Check Backend Verification Result
-            // --------------------------------------------
-
-            if (!verificationResult.success) {
-              toast.error(
-                verificationResult.message ||
-                'Payment verification failed.'
-              );
-              return;
-            }
-            // Save the ticket returned by the backend
-            setIssuedTicket(verificationResult.ticket);
-
-            // ------------------------------------------------
-            // IMPORTANT:
-            //
-            // DO NOT GENERATE A TICKET HERE.
-            //
-            // Ticket generation will be moved to the backend
-            // in the next steps.
-            // ------------------------------------------------
-
-            toast.success(
-              'Payment verified successfully.'
-            );
-
-            // Start payment processing UI
-            setIsProcessingPayment(true);
-          } catch (error) {
-            console.error(
-              'Payment verification failed:',
-              error
-            );
-
-            toast.error(
-              error.message ||
-              'Payment verification failed. Please contact support.'
-            );
-          }
-        },
-
-        // ------------------------------------------------
-        // Razorpay Payment Failure Handler
-        // ------------------------------------------------
-
-        modal: {
-          ondismiss: function () {
-            console.log(
-              'Razorpay checkout was cancelled or closed.'
-            );
-
-            toast.error('Payment was cancelled.');
-          },
-        },
+      setIsProcessingPayment(true);
+      const payload = {
+        name: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        department: data.department,
+        transactionId: data.transactionId,
+        amount: data.amount,
       };
 
-      // --------------------------------------------------
-      // STEP 7: Open Razorpay Checkout
-      // --------------------------------------------------
-
-      const razorpay = new window.Razorpay(options);
-
-      razorpay.open();
+      const result = await submitRegistration(payload);
+      
+      if (result.success) {
+        setIssuedTicket(result.ticket);
+        toast.success('Payment verified successfully.');
+      } else {
+        toast.error(result.message || 'Payment verification failed.');
+        setIsProcessingPayment(false);
+      }
     } catch (error) {
-      console.error(
-        'Payment could not be started:',
-        error
-      );
-
-      toast.error(
-        'Payment could not be started. Please try again.'
-      );
+      console.error('Registration failed:', error);
+      toast.error(error.message || 'Registration failed. Please contact support.');
+      setIsProcessingPayment(false);
     }
   };
 
@@ -442,6 +329,25 @@ export const RegistrationForm = ({ className }) => {
               />
             </div>
 
+            {/* Transaction ID (Visible after redirect) */}
+            {hasRedirected && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="pt-2"
+              >
+                <Input
+                  label="Google Pay Transaction ID *"
+                  placeholder="e.g. UTR or Transaction Ref No."
+                  leftIcon={Hash}
+                  error={errors.transactionId?.message}
+                  {...register('transactionId', {
+                    required: hasRedirected ? 'Transaction ID is required' : false,
+                  })}
+                />
+              </motion.div>
+            )}
+
             {/* Submit Button */}
 
             <div className="pt-3">
@@ -452,7 +358,7 @@ export const RegistrationForm = ({ className }) => {
                 leftIcon={CreditCard}
                 className="w-full py-4 text-base font-black tracking-wide shadow-md shadow-[#0F5132]/20"
               >
-                Proceed to Razorpay (Pay ₹{settings?.entryFee || 150})
+                {hasRedirected ? 'Submit Registration' : `Proceed to Pay ₹${settings?.entryFee || 150}`}
               </Button>
             </div>
           </form>

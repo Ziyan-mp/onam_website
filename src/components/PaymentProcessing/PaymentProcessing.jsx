@@ -15,7 +15,7 @@ export const PaymentProcessing = ({
   const [currentStep, setCurrentStep] = useState(0);
 
   const processingSteps = [
-    'Connecting to Secure Razorpay Gateway...',
+    'Connecting to Secure Gateway...',
     'Encrypting Staff Verification Credentials...',
     'Confirming ₹150 Entry Payment...',
     'Generating Digital QR Ticket...',
@@ -116,7 +116,7 @@ export const PaymentProcessing = ({
             {/* Security Guarantee Footer */}
             <div className="pt-2 flex items-center justify-between text-[11px] text-amber-200/70 font-sans border-t border-[#167448]">
               <span className="flex items-center gap-1 font-bold text-[#D4A017] font-heading">
-                <Lock className="w-3 h-3" /> Razorpay 256-Bit SSL
+                <Lock className="w-3 h-3" /> Secure 256-Bit SSL
               </span>
               <span>₹{amount}.00 Authorized</span>
             </div>

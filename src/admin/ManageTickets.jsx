@@ -24,7 +24,7 @@ import { getTickets } from '../services/adminApi';
 import { useDraw } from '../hooks/useDraw';
 
 /**
- * Razorpay Payment History & Participant Logs Page Component
+ * Payment History & Participant Logs Page Component
  */
 export const ManageTickets = ({ className }) => {
   const { lastDrawTime } = useDraw();
@@ -54,13 +54,12 @@ export const ManageTickets = ({ className }) => {
 
   // Real-Time Filter Logic
   const filteredPayments = tickets.filter((item) => {
-    const paymentId = item.razorpayPaymentId || '';
+    const paymentId = '';
     const name = item.purchaserName || '';
     const dept = item.department || '';
     const status = item.paymentStatus ? item.paymentStatus.toUpperCase() : '';
     
     const matchesSearch =
-      paymentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       dept.toLowerCase().includes(searchTerm.toLowerCase()) ||
       formatTicketId(item.ticketCode).toLowerCase().includes(searchTerm.toLowerCase());
@@ -72,17 +71,17 @@ export const ManageTickets = ({ className }) => {
 
   // CSV Export Handler
   const exportCSV = () => {
-    const headers = ['Payment ID,Ticket Code,Participant Name,Department,Amount (INR),Payment Date,Status'];
+    const headers = ['Ticket Code,Participant Name,Department,Amount (INR),Payment Date,Status'];
     const rows = filteredPayments.map(
       (p) =>
-        `"${p.razorpayPaymentId}","${formatTicketId(p.ticketCode)}","${p.purchaserName}","${p.department}",${p.ticketPrice},"${formatDate(p.purchasedAt)}","${p.paymentStatus.toUpperCase()}"`
+        `"${formatTicketId(p.ticketCode)}","${p.purchaserName}","${p.department}",${p.ticketPrice},"${formatDate(p.purchasedAt)}","${p.paymentStatus.toUpperCase()}"`
     );
 
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `Razorpay_Payments_Onam_2026_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `Payments_Onam_2026_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -97,7 +96,7 @@ export const ManageTickets = ({ className }) => {
         isOpen={Boolean(activeModalTicket)}
         onClose={() => setActiveModalTicket(null)}
         title="Participant Ticket & Receipt"
-        subtitle="Verified Razorpay Transaction Record"
+        subtitle="Verified Transaction Record"
       >
         {activeModalTicket && (
           <div className="pt-2">
@@ -105,7 +104,7 @@ export const ManageTickets = ({ className }) => {
               ticketNumber={activeModalTicket.ticketCode}
               participantName={activeModalTicket.purchaserName}
               department={activeModalTicket.department}
-              paymentId={activeModalTicket.razorpayPaymentId}
+              paymentId={activeModalTicket.transactionId || activeModalTicket._id}
               amount={activeModalTicket.ticketPrice}
               drawDate={activeModalTicket.purchasedAt}
               status={activeModalTicket.paymentStatus.toUpperCase()}
@@ -121,7 +120,7 @@ export const ManageTickets = ({ className }) => {
             Payment History
           </h1>
           <p className="text-xs text-slate-500 font-sans">
-            Search, filter, and export staff ticket transactions & Razorpay payment logs.
+            Search, filter, and export staff ticket transactions & payment logs.
           </p>
         </div>
 
@@ -145,7 +144,7 @@ export const ManageTickets = ({ className }) => {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by Payment ID, Participant Name, Department, or Staff ID..."
+              placeholder="Search by Participant Name, Department, or Staff ID..."
               className="w-full bg-[#FFF9F0] border border-amber-200/80 rounded-2xl pl-11 pr-4 py-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0F5132] focus:ring-2 focus:ring-[#0F5132]/20 shadow-xs font-sans"
             />
           </div>
@@ -177,7 +176,7 @@ export const ManageTickets = ({ className }) => {
         </div>
       </div>
 
-      {/* Razorpay Payments Data Table */}
+      {/* Payments Data Table */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -187,7 +186,7 @@ export const ManageTickets = ({ className }) => {
           <table className="w-full text-left text-xs font-sans">
             <thead className="bg-[#FFF9F0] border-b border-amber-100 text-slate-700 uppercase font-heading text-[10px] font-black tracking-wider">
               <tr>
-                <th className="px-6 py-4">Payment ID</th>
+                <th className="px-6 py-4">Ticket Code</th>
                 <th className="px-6 py-4">Participant</th>
                 <th className="px-6 py-4">Department</th>
                 <th className="px-6 py-4">Amount</th>
@@ -206,11 +205,10 @@ export const ManageTickets = ({ className }) => {
               ) : filteredPayments.length > 0 ? (
                 filteredPayments.map((row) => (
                   <tr key={row._id || row.ticketCode} className="hover:bg-[#FFF9F0]/60 transition-colors">
-                    {/* Payment ID */}
+                    {/* Ticket Code */}
                     <td className="px-6 py-4 font-mono font-black text-[#0F5132]">
                       <div className="flex flex-col">
-                        <span>{row.razorpayPaymentId}</span>
-                        <span className="text-[10px] text-slate-400 font-sans">{formatTicketId(row.ticketCode)}</span>
+                        <span>{formatTicketId(row.ticketCode)}</span>
                       </div>
                     </td>
 
