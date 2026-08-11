@@ -31,7 +31,7 @@ Create a `.env` file.
 Example:
 
 ```env
-VITE_API_URL=https://onam-backend.onrender.com/api
+VITE_API_URL=https://onam-backend-wkz2.onrender.com/api
 VITE_GOOGLE_PAY_URL=https://pay.google.com/... (replace with confidential URL)
 ```
 
