@@ -56,7 +56,7 @@ export const RegistrationForm = ({ className }) => {
   const onSubmit = async (data) => {
     if (!hasRedirected) {
       const gpayUrl = import.meta.env.VITE_GOOGLE_PAY_URL;
-      
+
       if (!gpayUrl || gpayUrl.trim() === '') {
         toast.error('Payment configuration is missing. Payment is temporarily unavailable.');
         return;
@@ -87,7 +87,7 @@ export const RegistrationForm = ({ className }) => {
       };
 
       const result = await submitRegistration(payload);
-      
+
       if (result.success) {
         setIssuedTicket(result.ticket);
         toast.success('Payment verified successfully.');
