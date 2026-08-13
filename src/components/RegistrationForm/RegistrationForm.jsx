@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
-import { QRCodeSVG } from 'qrcode.react';
 import {
   User,
   Building2,
@@ -23,6 +22,15 @@ import { cn } from '../../utils/cn';
 import { useSettings } from '../../context/SettingsContext';
 import { submitRegistration } from '../../services/registrationService';
 
+// IMPORTANT:
+// Put your actual QR image here:
+// src/assets/payment-qr.png
+import paymentQR from '../../assets/payment-qr.png';
+
+
+/**
+ * Professional Registration & Checkout Form Component
+ */
 export const RegistrationForm = ({ className }) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [issuedTicket, setIssuedTicket] = useState(null);
@@ -32,15 +40,6 @@ export const RegistrationForm = ({ className }) => {
   const { settings } = useSettings();
 
   const entryFee = settings?.entryFee || 150;
-
-  /*
-   * UPI URI encoded inside the QR code.
-   *
-   * When scanned, Google Pay / another UPI app
-   * will open with the receiver and amount.
-   */
-  const upiUrl =
-    `upi://pay?pa=aswandharj@okaxis&pn=ASWANDHA%20R.%20J&am=${entryFee}&cu=INR`;
 
   const {
     register,
@@ -58,8 +57,26 @@ export const RegistrationForm = ({ className }) => {
     },
   });
 
+
   /**
-   * Submit registration AFTER payment.
+   * STEP 1:
+   * Validate participant details and show QR code.
+   */
+  const handleProceedToPay = () => {
+    setShowPaymentQR(true);
+
+    toast.success(
+      'Take a screenshot of the QR code and complete the payment using Google Pay.',
+      {
+        duration: 6000,
+      }
+    );
+  };
+
+
+  /**
+   * STEP 2:
+   * Submit registration after payment and Transaction ID.
    */
   const onSubmit = async (data) => {
     if (!data.transactionId || data.transactionId.trim() === '') {
@@ -83,6 +100,7 @@ export const RegistrationForm = ({ className }) => {
 
       if (result.success) {
         setIssuedTicket(result.ticket);
+
         toast.success('Payment verified successfully.');
       } else {
         toast.error(
@@ -91,6 +109,7 @@ export const RegistrationForm = ({ className }) => {
 
         setIsProcessingPayment(false);
       }
+
     } catch (error) {
       console.error('Registration failed:', error);
 
@@ -102,6 +121,7 @@ export const RegistrationForm = ({ className }) => {
       setIsProcessingPayment(false);
     }
   };
+
 
   /**
    * Payment processing animation
@@ -121,24 +141,20 @@ export const RegistrationForm = ({ className }) => {
 
         reset();
       }
+
     }, 5000);
 
     return () => clearTimeout(timer);
   }, [isProcessingPayment, issuedTicket, reset]);
 
-  /**
-   * Show QR payment screen
-   */
-  const handleProceedToPay = () => {
-    setShowPaymentQR(true);
-  };
 
   /**
-   * Return from QR/payment screen
+   * Return to participant form.
    */
   const handleBackToForm = () => {
     setShowPaymentQR(false);
   };
+
 
   return (
     <section
@@ -148,6 +164,7 @@ export const RegistrationForm = ({ className }) => {
         className
       )}
     >
+
       {/* ----------------------------------------------- */}
       {/* Payment Processing */}
       {/* ----------------------------------------------- */}
@@ -156,6 +173,7 @@ export const RegistrationForm = ({ className }) => {
         isOpen={isProcessingPayment}
         amount={entryFee}
       />
+
 
       {/* ----------------------------------------------- */}
       {/* Success Modal */}
@@ -192,13 +210,17 @@ export const RegistrationForm = ({ className }) => {
         )}
       </Modal>
 
+
       {/* ----------------------------------------------- */}
       {/* Main Content */}
       {/* ----------------------------------------------- */}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
 
-        {/* Header */}
+
+        {/* --------------------------------------------- */}
+        {/* Section Header */}
+        {/* --------------------------------------------- */}
 
         <div className="text-center space-y-3 max-w-2xl mx-auto">
 
@@ -212,20 +234,23 @@ export const RegistrationForm = ({ className }) => {
 
           </div>
 
+
           <h2 className="text-3xl sm:text-5xl font-black text-[#0F5132] tracking-tight font-heading">
             {settings?.eventName || 'Onam Lucky Draw'} Registration
           </h2>
 
+
           <p className="text-slate-600 text-sm font-sans">
-            Fill in your staff details below to purchase your
-            official ₹{entryFee} entry ticket for the draw.
+            Fill in your staff details below to purchase
+            your official ₹{entryFee} entry ticket for the draw.
           </p>
 
         </div>
 
-        {/* ----------------------------------------------- */}
-        {/* FORM / PAYMENT CARD */}
-        {/* ----------------------------------------------- */}
+
+        {/* --------------------------------------------- */}
+        {/* Registration Card */}
+        {/* --------------------------------------------- */}
 
         <motion.div
           initial={{
@@ -245,15 +270,17 @@ export const RegistrationForm = ({ className }) => {
           className="bg-white rounded-3xl p-6 sm:p-10 border border-amber-200/90 shadow-soft space-y-6"
         >
 
-          {/* ------------------------------------------- */}
-          {/* QR PAYMENT SCREEN */}
-          {/* ------------------------------------------- */}
+
+          {/* ================================================= */}
+          {/* PAYMENT QR SCREEN */}
+          {/* ================================================= */}
 
           {showPaymentQR ? (
 
             <div className="space-y-6">
 
-              {/* Back button */}
+
+              {/* Back */}
 
               <button
                 type="button"
@@ -264,7 +291,8 @@ export const RegistrationForm = ({ className }) => {
                 Back to registration
               </button>
 
-              {/* Payment heading */}
+
+              {/* Heading */}
 
               <div className="text-center space-y-2">
 
@@ -273,11 +301,11 @@ export const RegistrationForm = ({ className }) => {
                 </h3>
 
                 <p className="text-sm text-slate-600">
-                  Scan the QR code below using Google Pay
-                  or another UPI app.
+                  Scan the QR code below to pay using Google Pay.
                 </p>
 
               </div>
+
 
               {/* Amount */}
 
@@ -293,22 +321,25 @@ export const RegistrationForm = ({ className }) => {
 
               </div>
 
-              {/* QR CODE */}
+
+              {/* ================================================= */}
+              {/* ACTUAL QR IMAGE */}
+              {/* ================================================= */}
 
               <div className="flex justify-center">
 
-                <div className="bg-white p-5 rounded-2xl border-2 border-[#0F5132]/20 shadow-lg">
+                <div className="bg-white p-4 rounded-2xl border-2 border-[#0F5132]/20 shadow-lg">
 
-                  <QRCodeSVG
-                    value={upiUrl}
-                    size={260}
-                    level="H"
-                    includeMargin={true}
+                  <img
+                    src={paymentQR}
+                    alt="UPI Payment QR Code"
+                    className="w-64 h-64 object-contain"
                   />
 
                 </div>
 
               </div>
+
 
               {/* Instructions */}
 
@@ -321,7 +352,7 @@ export const RegistrationForm = ({ className }) => {
                 <ol className="text-sm text-slate-600 space-y-2 list-decimal list-inside">
 
                   <li>
-                    Take a screenshot of this QR code.
+                    Take a screenshot of the QR code above.
                   </li>
 
                   <li>
@@ -329,30 +360,29 @@ export const RegistrationForm = ({ className }) => {
                   </li>
 
                   <li>
-                    Choose the option to scan a QR code.
+                    Select the QR scanner / gallery option.
                   </li>
 
                   <li>
-                    Select the screenshot from your gallery
-                    if Google Pay provides that option.
+                    Select the QR screenshot.
                   </li>
 
                   <li>
-                    Confirm the receiver and pay ₹{entryFee}.
+                    Check the receiver details and pay ₹{entryFee}.
                   </li>
 
                   <li>
-                    After successful payment, return to this
-                    website.
+                    Return to this website after successful payment.
                   </li>
 
                 </ol>
 
               </div>
 
+
               {/* Transaction ID */}
 
-              <div className="space-y-4">
+              <div className="space-y-2">
 
                 <Input
                   label="Google Pay Transaction ID *"
@@ -366,16 +396,17 @@ export const RegistrationForm = ({ className }) => {
                 />
 
                 <p className="text-xs text-slate-500">
-                  Enter the transaction ID shown in your
-                  Google Pay payment receipt.
+                  Enter the Transaction ID shown in your Google Pay
+                  payment receipt.
                 </p>
 
               </div>
 
+
               {/* Submit */}
 
               <Button
-                type="submit"
+                type="button"
                 variant="primary"
                 size="lg"
                 leftIcon={CreditCard}
@@ -389,9 +420,10 @@ export const RegistrationForm = ({ className }) => {
 
           ) : (
 
-            /* ------------------------------------------- */
+
+            /* ================================================= */
             /* REGISTRATION FORM */
-            /* ------------------------------------------- */
+            /* ================================================= */
 
             <>
 
@@ -417,12 +449,14 @@ export const RegistrationForm = ({ className }) => {
 
               </div>
 
+
               {/* Form */}
 
               <form
                 onSubmit={handleSubmit(handleProceedToPay)}
                 className="space-y-5"
               >
+
 
                 {/* Full Name */}
 
@@ -441,6 +475,7 @@ export const RegistrationForm = ({ className }) => {
                   })}
                 />
 
+
                 {/* Department */}
 
                 <Input
@@ -453,9 +488,13 @@ export const RegistrationForm = ({ className }) => {
                   })}
                 />
 
+
                 {/* Phone + Email */}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+
+                  {/* Phone */}
 
                   <Input
                     label="Phone Number *"
@@ -466,13 +505,18 @@ export const RegistrationForm = ({ className }) => {
                     {...register('phone', {
                       required:
                         'Phone number is required',
+
                       pattern: {
                         value: /^[6-9]\d{9}$/,
+
                         message:
                           'Enter valid 10-digit Indian phone number',
                       },
                     })}
                   />
+
+
+                  {/* Email */}
 
                   <Input
                     label="Email Address *"
@@ -483,9 +527,11 @@ export const RegistrationForm = ({ className }) => {
                     {...register('email', {
                       required:
                         'Email address is required',
+
                       pattern: {
                         value:
                           /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+
                         message:
                           'Enter valid email address',
                       },
@@ -494,7 +540,8 @@ export const RegistrationForm = ({ className }) => {
 
                 </div>
 
-                {/* Proceed */}
+
+                {/* Proceed To Pay */}
 
                 <div className="pt-3">
 
@@ -513,11 +560,13 @@ export const RegistrationForm = ({ className }) => {
               </form>
 
             </>
+
           )}
 
         </motion.div>
 
       </div>
+
     </section>
   );
 };
