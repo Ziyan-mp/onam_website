@@ -369,4 +369,3 @@ export const RegistrationForm = ({ className }) => {
 };
 
 export default RegistrationForm;
-
